@@ -1,0 +1,77 @@
+/* atlas-v7 · modo apresentação (js/present.js). Carregar depois de site.css.
+ * Ganchos: html[data-present], html[data-present-act="1…11"], .act.is-entering (900 ms),
+ * #t00.is-attract (tela de espera), .lstep.is-pstep (passo ativo), .present-index (índice).
+ * A escala de fonte fica em tokens.css (:root[data-present]).
+ */
+
+/* ---------- cada ato ocupa a tela e rola só por dentro (o módulo controla) ---------- */
+html[data-present]{overflow:hidden;scroll-behavior:auto;scroll-padding-top:0;touch-action:manipulation}
+[data-present] body{overscroll-behavior:none}
+[data-present] .act{height:100vh;height:100svh;min-height:0;overflow:hidden;overscroll-behavior:contain}
+[data-present] .t11{min-height:0}
+[data-present] .skip,[data-present] .tabs,[data-present] .toc{display:none!important}
+
+/* ---------- contador e ajuda (decoração, aria-hidden) ---------- */
+[data-present] .present-ui{display:flex;align-items:center;position:fixed;top:0;height:var(--bar-h,64px);right:calc(var(--gutter,40px) + 96px);z-index:55;pointer-events:none;color:var(--text-3,#a3a3a3);font-size:13px;letter-spacing:.08em}
+.present-ui .act-count{font-size:15px;color:var(--text-3,#a3a3a3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.present-ui .act-count b{display:inline-flex;color:#fff;font-weight:500}
+.present-ui .act-help{position:absolute;top:calc(100% + 12px);right:-96px;white-space:nowrap;padding:8px 12px;border-radius:var(--r-pill,999px);background:rgba(5,5,5,.72);border:1px solid var(--line,rgba(255,255,255,.06));opacity:1;transition:opacity .6s var(--e-std,ease)}
+.present-ui.is-quiet .act-help{opacity:0}
+.pc-d{display:inline-block;height:1.25em;line-height:1.25em;overflow:hidden;vertical-align:top}
+.pc-col{display:block}
+.pc-col i{display:block;height:1.25em;font-style:normal}
+
+/* ---------- fio de progresso: o ato, não a rolagem ---------- */
+[data-present] .progress span{width:var(--present-p,0%)!important;transition:width 450ms var(--e-out,cubic-bezier(.16,1,.3,1))}
+
+/* ---------- scrollytelling: a figura fica presa enquanto o texto anda (o .lean de site.css desfaz o sticky) ---------- */
+[data-present] .scrolly .sc-fig{position:sticky;top:calc(var(--bar-h,64px) + 28px)}
+[data-present] .scrolly .lstep{margin-bottom:7vh}   /* lista mais junta: o título fica à vista por mais passos */
+
+/* ---------- scrollytelling: só o passo ativo mostra a frase (a curta, quando existe) ---------- */
+[data-present] .scrolly .lstep-body{display:none;max-height:none;opacity:1;transition:none}
+[data-present] .scrolly .lstep.is-pstep .lstep-body{display:block;animation:p-body .45s var(--e-out,cubic-bezier(.16,1,.3,1)) both}
+[data-present] .lstep.is-pstep .lstep-body:has(.short) .just{display:none}
+[data-present] .lstep.is-pstep .short{display:block;margin-top:10px;color:var(--text-1,#fff);font-size:var(--fs-lead,22px);line-height:1.45}
+[data-present] .lstep .just{font-size:calc(var(--fs-lead,22px) * .86);line-height:1.55}
+[data-present] .lstep-h{font-size:22px}
+[data-present] .lstep .src{font-size:13px}
+@keyframes p-body{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- ao chegar: a entrada do ato roda de novo, encurtada a 60 % ---------- */
+[data-present] .act.is-entering .rv.is-in{animation:p-rise calc(var(--d-reveal,600ms) * .6) var(--e-out,cubic-bezier(.16,1,.3,1)) both;animation-delay:calc(var(--i,0) * var(--stagger,70ms) * .6 + 120ms)}
+@keyframes p-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ---------- tela de espera: o impacto do feixe pulsa a cada 8 s ---------- */
+[data-present] #t00.is-lit.is-attract .impact{animation:impact 1.2s var(--e-out,cubic-bezier(.16,1,.3,1)) .8s both,p-attract 8s var(--e-out,cubic-bezier(.16,1,.3,1)) infinite}
+@keyframes p-attract{
+  0%{scale:1;filter:none}
+  6%{scale:1.35;filter:brightness(1.7)}
+  16%,100%{scale:1;filter:none}
+}
+
+/* ---------- índice dos atos (toque duplo) ---------- */
+.present-index{width:min(92vw,1080px);max-height:88vh;padding:36px 40px 40px;border:1px solid var(--glass-border,rgba(255,255,255,.1));border-radius:var(--r,16px);background:rgba(10,10,10,.86);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:var(--text-2,#c4c4c4);overflow:auto}
+.present-index::backdrop{background:rgba(0,0,0,.7)}
+.present-index[open]{animation:p-index .35s var(--e-out,cubic-bezier(.16,1,.3,1))}
+@keyframes p-index{from{opacity:0;transform:translateY(16px)}}
+.pi-lab{font-size:var(--fs-lab,15px);letter-spacing:var(--track-lab,.18em);color:var(--red-text,#ff5a4f);margin:0 0 22px}
+.pi-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pi-grid li{display:flex}
+.pi-grid button{width:100%;min-height:96px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 18px;text-align:left;border-radius:var(--r-sm,10px);border:1px solid var(--line-strong,rgba(255,255,255,.12));background:rgba(255,255,255,.03);color:#fff;font:500 18px/1.25 var(--f-sans,system-ui);transition:border-color var(--d-fast,200ms),background-color var(--d-fast,200ms)}
+.pi-grid button b{font-size:13px;font-weight:400;letter-spacing:.08em;color:var(--text-3,#a3a3a3)}
+.pi-grid button[aria-current]{border-color:rgba(255,90,79,.7);background:rgba(223,37,49,.12)}
+.pi-grid button[aria-current] b{color:var(--red-text,#ff5a4f)}
+.pi-grid button:active{background:rgba(255,255,255,.08)}
+@media (hover:hover) and (pointer:fine){.pi-grid button:hover{border-color:#fff}}
+.pi-close{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;background:#fff;color:#000;font-size:26px;line-height:1}
+@media (max-width:1100px){.pi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* ---------- movimento reduzido ---------- */
+@media (prefers-reduced-motion:reduce){
+  [data-present] .scrolly .lstep.is-pstep .lstep-body,
+  [data-present] .act.is-entering .rv.is-in,
+  .present-index[open]{animation:none}
+  [data-present] #t00.is-lit.is-attract .impact{animation:none;opacity:1}
+  [data-present] .progress span{transition:none}
+}

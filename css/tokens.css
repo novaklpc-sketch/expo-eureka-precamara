@@ -1,0 +1,69 @@
+/* Pré-câmara · atlas-v7 (Expo Eureka) · sistema "Ignição" · tokens
+ * Base: atlas-v6/css/tokens.css (Lumina + vermelho do projeto). Mudanças: texto secundário mais claro,
+ * vidro com raio 16 px, cores de luz (spark, heat), escala do modo apresentação e tokens dos efeitos.
+ */
+:root{
+  /* ---------- cor ---------- */
+  --bg:#050505;
+  --card:#0a0a0a;
+  --raised:#111111;
+  --line:rgba(255,255,255,.06);
+  --line-strong:rgba(255,255,255,.12);
+  --glass:rgba(255,255,255,.05);
+  --glass-border:rgba(255,255,255,.10);
+  --glass-blur:20px;
+  --text-1:#ffffff;
+  --text-2:#c4c4c4;                 /* sobe de #b9b9bd: legível na luz do pavilhão */
+  --text-3:#a3a3a3;
+  --red:#df2531;
+  --red-2:#ff5a4f;
+  --red-text:#ff5a4f;
+  --heat:#ff7a2f;                   /* só dentro dos rastros de luz */
+  --spark:#fff4ec;                  /* núcleo do feixe */
+  --ok:#3ddc84;
+  --grad-red:linear-gradient(180deg,var(--red-2),var(--red));
+  --grad-jet:linear-gradient(90deg,var(--spark) 0%,var(--red-2) 18%,var(--red) 55%,rgba(255,122,47,0) 100%);
+  --grad-beam:linear-gradient(180deg,rgba(255,244,236,0) 0%,var(--spark) 60%,var(--red-2) 100%);
+  --haze:radial-gradient(60% 40% at 50% 100%,rgba(223,37,49,.35),rgba(223,37,49,0) 70%);
+  --glow:0 0 25px rgba(223,37,49,.35),0 8px 40px rgba(223,37,49,.18);
+
+  /* ---------- tipografia ---------- */
+  --f-sans:"Geist","Geist Local",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"Geist Mono","Geist Mono Local",ui-monospace,Menlo,Consolas,monospace;
+  --fs-giant:clamp(96px,20vw,320px);         /* PRÉ-CÂMARA atrás da peça */
+  --fs-h1:clamp(40px,24px + 2.2vw,56px);
+  --fs-h2:clamp(28px,18px + 1.6vw,40px);
+  --fs-lead:clamp(16px,15px + .25vw,18px);
+  --fs-body:clamp(15px,14.5px + .15vw,16px);
+  --fs-lab:12px;
+  --fs-stat:clamp(40px,28px + 1.6vw,56px);
+  --lh-text:1.65;
+  --track-lab:.18em;
+  --track-tight:-.04em;
+  --measure:64ch;
+
+  /* ---------- forma e espaço ---------- */
+  --r:16px; --r-sm:10px; --r-pill:999px;
+  --gutter:clamp(20px,3.5vw,40px);
+  --bar-h:64px;
+  --max:1280px;
+  --tap:44px;
+  --text-4:#7c7c7c; --red-soft:rgba(223,37,49,.14); --focus:#ffffff; --shadow-card:0 30px 80px rgba(0,0,0,.6);
+  --s-4:4px; --s-8:8px; --s-12:12px; --s-16:16px; --s-20:20px; --s-24:24px; --s-32:32px;
+  --e-std:cubic-bezier(.2,0,0,1); --fs-meta:13px; --wrap:1384px;                                /* alvo mínimo de toque (iPad) */
+
+  /* ---------- movimento ---------- */
+  --d-fast:200ms; --d-base:300ms; --d-reveal:600ms; --stagger:70ms;
+  --d-beam:2000ms; --d-jets:1200ms;
+  --e-out:cubic-bezier(.16,1,.3,1);
+  --e-inout:cubic-bezier(.77,0,.175,1);
+}
+
+/* modo apresentação: um degrau acima, calibrado para MacBook a 50–80 cm */
+:root[data-present]{
+  --fs-h1:56px; --fs-h2:54px; --fs-lead:22px; --fs-lab:15px; --fs-stat:108px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  :root{ --d-beam:0ms; --d-jets:0ms; --d-reveal:200ms; --stagger:0ms; }
+}
