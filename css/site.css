@@ -389,7 +389,18 @@ text.lean-note{font-size:11.5px;fill:var(--text-3)}
   .t10-grid{grid-template-columns:1fr;gap:28px}
   .t06-side{order:-1}
   .t06-grid{display:flex;flex-direction:column}
-  #t04{background-image:radial-gradient(80% 40% at 80% 30%,rgba(223,37,49,.18),transparent 70%)}
+  /* celular: o fundo ocupa uma tela de altura (e não a seção inteira) e some para o preto; evita esticar a imagem 5–9× num ecrã 3× */
+  .sec{--fade:linear-gradient(180deg,transparent calc(100vh - 180px),var(--bg) 100vh);--fade:linear-gradient(180deg,transparent calc(100svh - 180px),var(--bg) 100svh);background-size:auto 100vh;background-size:auto 100svh;background-position:top center}
+  #t01{background-image:var(--fade),url(../assets/bg/t01.webp)}
+  #t02{background-image:var(--fade),url(../assets/bg/t02.webp)}
+  #t03{background-image:var(--fade),url(../assets/bg/t03.webp)}
+  #t04{background-image:var(--fade),radial-gradient(80% 40% at 80% 30%,rgba(223,37,49,.18),transparent 70%)}
+  /* T06: o fundo vai no palco do 3D (altura do palco, ~1,5× num ecrã 3×), com o chão exatamente sob a peça */
+  #t06{background-image:none}
+  .t06-stage{background:linear-gradient(180deg,var(--bg) 0%,transparent 22%,transparent 80%,var(--bg) 100%),url(../assets/bg/t06.webp) center/auto 100% no-repeat}
+  #t07{background-image:var(--fade),linear-gradient(180deg,rgba(5,5,5,.85) 0%,rgba(5,5,5,.6) 40%,rgba(5,5,5,.15) 100%),url(../assets/bg/t07.webp)}
+  #t08{background-image:var(--fade),url(../assets/bg/t08.webp)}
+  #t10{background-image:var(--fade),url(../assets/bg/t10.webp);background-position:top center}
   .authors li{font-size:17px;gap:12px}
   .award{margin-top:0}
   .inst{margin-top:48px}
