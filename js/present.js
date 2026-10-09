@@ -27,7 +27,6 @@ export function initPresent({ reduced = false } = {}) {
   let idleT = 0, helpT = 0;
 
   /* ---------- medidas ---------- */
-  const barH = () => parseFloat(getComputedStyle(root).getPropertyValue('--bar-h')) || 64;
   const topOf = el => el.getBoundingClientRect().top + scrollY;
   const isScrolly = a => a.classList.contains('scrolly');
   const stepsOf = a => $$('.lstep[data-step]', a);
@@ -183,6 +182,7 @@ export function initPresent({ reduced = false } = {}) {
     const i = start ?? actAt(innerHeight / 2);
     const stepWas = isScrolly(acts[i]) ? currentOn(acts[i]) : 1;
     on = true; cur = i;
+    bindBlocking();
     root.setAttribute('data-present', '');
     btn && (btn.textContent = 'Sair', btn.setAttribute('aria-pressed', 'true'));
     acts.forEach(a => { a.scrollTop = 0; });
@@ -203,6 +203,7 @@ export function initPresent({ reduced = false } = {}) {
     const a = acts[cur], n = step.get(a);
     acts.forEach(x => x.getAnimations?.().forEach(an => an.cancel()));
     busy = false; queued = null; on = false;
+    unbindBlocking();
     closeIndex();
     root.removeAttribute('data-present'); delete root.dataset.presentAct;
     root.style.removeProperty('--present-p');
@@ -275,10 +276,13 @@ export function initPresent({ reduced = false } = {}) {
     const lit = () => setTimeout(() => { if (on && cur === 0) t00?.classList.add('is-attract'); }, 2600);   // depois da entrada completa
     if (cur !== 0) go(0, { dir: -1 }).then(lit); else lit();
   }
-  const poke = () => {
+  let pokedAt = 0;
+  const poke = () => {                  // rearma no máximo uma vez por segundo: o pointermove chega às dezenas por segundo
     if (!on) return;
-    t00?.classList.remove('is-attract');
-    armIdle();
+    if (t00?.classList.contains('is-attract')) t00.classList.remove('is-attract');
+    const now = performance.now();
+    if (now - pokedAt < 1000) return;
+    pokedAt = now; armIdle();
   };
   ['keydown', 'pointerdown', 'pointermove', 'wheel', 'touchstart'].forEach(t => addEventListener(t, poke, { passive: true, capture: true }));
 
@@ -312,7 +316,8 @@ export function initPresent({ reduced = false } = {}) {
 
   /* ---------- trackpad e roda do mouse: um gesto, um passo ---------- */
   let wAcc = 0, wLockUntil = 0, wQuietT = 0, wLocked = false;
-  addEventListener('wheel', e => {
+  /* wheel e touchmove são não passivos: só ficam registrados com o modo ligado (fora dele a rolagem normal não espera o JS) */
+  const onWheel = e => {
     if (!on || (e.target instanceof Element && e.target.closest('.cad'))) return;
     e.preventDefault();
     const now = performance.now();
@@ -324,7 +329,12 @@ export function initPresent({ reduced = false } = {}) {
     if (Math.abs(wAcc) < 40) return;
     (wAcc > 0 ? next : prev)();
     wAcc = 0; wLocked = true; wLockUntil = now + 700;
-  }, { passive: false });
+  };
+  const onTouchMove = e => {
+    if (on && t0 && !t0.own && e.cancelable) e.preventDefault();   // a página não rola sozinha no modo apresentação
+  };
+  const bindBlocking = () => { addEventListener('wheel', onWheel, { passive: false }); addEventListener('touchmove', onTouchMove, { passive: false }); };
+  const unbindBlocking = () => { removeEventListener('wheel', onWheel); removeEventListener('touchmove', onTouchMove); };
 
   /* ---------- toque (iPad): arrastar, bordas e toque duplo ---------- */
   let t0 = null;
@@ -334,9 +344,6 @@ export function initPresent({ reduced = false } = {}) {
     const p = e.touches[0];
     t0 = { x: p.clientX, y: p.clientY, own: e.target instanceof Element && !!e.target.closest(OWN) };
   }, { passive: true });
-  addEventListener('touchmove', e => {
-    if (on && t0 && !t0.own && e.cancelable) e.preventDefault();   // a página não rola sozinha no modo apresentação
-  }, { passive: false });
   addEventListener('touchend', e => {
     if (!on || !t0 || t0.own) { t0 = null; return; }
     const p = e.changedTouches[0], dx = p.clientX - t0.x, dy = p.clientY - t0.y; t0 = null;

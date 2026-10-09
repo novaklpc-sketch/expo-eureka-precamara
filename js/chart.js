@@ -16,7 +16,7 @@ export const LIMIT=(()=>{let l=L0;while(l<L1&&curves.cov(l)<5)l+=.0005;return +l
 export const lambdaAt=p=>0.95+clip(p,0,1)*(1.72-0.95);
 
 const SVGNS='http://www.w3.org/2000/svg';
-const el=(n,a={},t)=>{const e=document.createElementNS(SVGNS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e};
+export const el=(n,a={},t)=>{const e=document.createElementNS(SVGNS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e};
 
 export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  const svg=el('svg',{class:'lean-svg',role:'img','aria-labelledby':'lean-svg-title'});

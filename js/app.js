@@ -1,5 +1,6 @@
 /* atlas-v7 · orquestra a página. Cada tela tem seu bloco; módulos pesados (3D, modo apresentação) entram por import dinâmico. */
 import { initLean } from './lean.js';
+import { easeOut, easeInOut } from './ease.js';
 
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,8 +22,8 @@ function countUp(el) {
   if (el.dataset.done) return; el.dataset.done = 1;
   const end = +el.dataset.count, dec = +(el.dataset.dec || 0), fmt = v => v.toFixed(dec).replace('.', ',');
   if (reduced) { el.textContent = fmt(end); return; }
-  const t0 = performance.now(), dur = 850, ease = t => 1 - Math.pow(1 - t, 3);
-  const tick = now => { const t = Math.min(1, (now - t0) / dur); el.textContent = fmt(end * ease(t)); if (t < 1) requestAnimationFrame(tick); };
+  const t0 = performance.now(), dur = 850;
+  const tick = now => { const t = Math.min(1, (now - t0) / dur); el.textContent = fmt(end * easeOut(t)); if (t < 1) requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
 }
 
@@ -84,11 +85,8 @@ function setStep03(n) {
 const t03IO = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setStep03(+e.target.dataset.step)), { rootMargin: '-45% 0px -45% 0px' });
 t03steps.forEach(s => t03IO.observe(s));
 setStep03(1);
-/* modo apresentação: o controlador avisa o passo */
-$$('.scrolly').forEach(sec => sec.addEventListener('present:step', e => {
-  const n = e.detail.step;
-  if (sec.id === 't03') setStep03(n);
-}));
+/* modo apresentação: o controlador avisa o passo (a T02 segue pelo observador do lean.js) */
+t03.addEventListener('present:step', e => setStep03(e.detail.step));
 
 /* ---------- T04: comparador passiva × ativa ---------- */
 const cmp = $('#cmp'), range = $('.cmp-range', cmp);
@@ -101,14 +99,20 @@ if (finePointer) {
     if (f < .25) animatePos(78); else if (f > .75) animatePos(22);
   });
 }
-let posAnim = 0;
+let posAnim = 0, posTarget = null;
 function animatePos(to, dur = 500) {
   if (reduced) { range.value = to; setPos(to); return; }
-  cancelAnimationFrame(posAnim);
-  const from = +range.value, t0 = performance.now(), ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const tick = now => { const t = Math.min(1, (now - t0) / dur), v = from + (to - from) * ease(t); range.value = v; setPos(v); if (t < 1) posAnim = requestAnimationFrame(tick); };
+  if (to === posTarget && (posAnim || +range.value === to)) return;   // já está indo (ou já chegou) a esse alvo: não reinicia a curva
+  cancelAnimationFrame(posAnim); posTarget = to;
+  const from = +range.value, t0 = performance.now();
+  const tick = now => {
+    const t = Math.min(1, (now - t0) / dur), v = from + (to - from) * easeInOut(t);
+    range.value = v; setPos(v);
+    posAnim = t < 1 ? requestAnimationFrame(tick) : 0;
+  };
   posAnim = requestAnimationFrame(tick);
 }
+range.addEventListener('pointerdown', () => { cancelAnimationFrame(posAnim); posAnim = 0; posTarget = null; });
 new IntersectionObserver((es, o) => es.forEach(e => {
   if (!e.isIntersecting) return; o.disconnect();
   if (!reduced) { animatePos(64, 600); setTimeout(() => animatePos(50, 600), 700); }
@@ -131,23 +135,28 @@ if (!reduced) {
 }
 
 /* ---------- T03 e T06: 3D do CAD (carrega quando a seção se aproxima) ---------- */
-function lazyCad(el, mode, onReady) {
+function lazyCad(el, mode, onReady, onFail = () => {}) {
   new IntersectionObserver(async (es, o) => {
     if (!es.some(e => e.isIntersecting)) return; o.disconnect();
+    let v = null;
     try {
       const { createCadViewer } = await import('./cad.js');
-      const v = await createCadViewer(el, { mode, reduced, onFail: () => {} });
-      if (v) onReady(v);
+      v = await createCadViewer(el, { mode, reduced });
     } catch (err) { console.warn('3D indisponível, mantém a imagem:', err); }
+    v ? onReady(v) : onFail();
   }, { rootMargin: '600px 0px' }).observe(el);
 }
 lazyCad($('#cad-t03'), 't03', v => { cad03 = v; v.setStep(step03 || 1); });
-const segBtns = $$('[data-cad]');
+const segBtns = $$('[data-cad]'), seg = $('.seg'), stageCap = $('.stage-cap');
 lazyCad($('#cad-t06'), 't06', v => {
   segBtns.forEach(b => b.addEventListener('click', () => {
     segBtns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     v.setMode(b.dataset.cad);
   }));
+}, () => {
+  /* sem 3D: fica a foto; os controles saem e a legenda deixa de pedir para arrastar */
+  seg.hidden = true;
+  if (stageCap) stageCap.textContent = 'A pré-câmara usinada. O modelo 3D não está disponível neste aparelho.';
 });
 
 /* ---------- lightbox (foto na resolução do arquivo, nunca ampliada) ---------- */

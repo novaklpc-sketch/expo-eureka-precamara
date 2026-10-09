@@ -10,6 +10,7 @@
  * Uso: const v = await createCadViewer(el, { mode:'t06', reduced, onFail }); v?.setMode('corte');
  */
 import * as THREE from '../assets/vendor/three.module.js';
+import { easeOut, easeInOut } from './ease.js';
 
 const MALHA = new URL('../assets/pre-camara-cad.bin', import.meta.url).href;
 // paleta das luzes (nunca azul)
@@ -18,8 +19,6 @@ const SVGNS = 'http://www.w3.org/2000/svg';
 const DEG = Math.PI / 180;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const easeOut = t => 1 - Math.pow(1 - t, 3);
-const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 // ── malha: leitura, centro, eixo longo em x, ponta em +x, tomada da vela em +y ──
 async function carregarMalha(src) {

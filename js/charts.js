@@ -3,8 +3,7 @@
  *      pré-câmara ativa ancorada nos limites de Zhu et al. (2022): 1,94 (combustível líquido) e 2,12 (vaporizado).
  * E6 · pressão no cilindro + MFB × ângulo: equações de tcc-precamera/scripts/gera_curvas.py (Figura 1 da monografia).
  * Nenhum valor é medido neste trabalho. */
-const NS = 'http://www.w3.org/2000/svg';
-const el = (n, a = {}, t) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; return e; };
+import { el } from './chart.js';
 const W = 'rgba(255,255,255,', MONO = 'var(--f-mono)', SANS = 'var(--f-sans)';
 const txt = (g, x, y, s, o = {}) => g.append(el('text', { x, y, fill: o.c || W + '.8)', 'font-size': o.s || 13, 'font-family': o.f || SANS, 'text-anchor': o.a || 'middle', 'font-weight': o.w || 400 }, s));
 const br = v => String(v).replace('.', ',').replace('-', '−');
@@ -28,11 +27,14 @@ export function drawE5(host) {
   txt(svg, P.l - 10, Y(5) + 4, '5 %', { f: MONO, s: 12, a: 'end', c: '#FF5A4F' });
   const vela = l => 1 + .6 * (l - .9) + 260 * Math.max(0, l - 1.35) ** 2.4;
   const k = (5 - (1 + .45 * (1.94 - .9))) / (1.94 - 1.7) ** 2.4, ativa = l => 1 + .45 * (l - .9) + k * Math.max(0, l - 1.7) ** 2.4;
+  /* combustível vaporizado: mesma forma, cruza 5 % em 2,12 (curva tracejada, mais clara) */
+  const kv = (5 - (1 + .45 * (2.12 - .9))) / (2.12 - 1.85) ** 2.4, vapor = l => 1 + .45 * (l - .9) + kv * Math.max(0, l - 1.85) ** 2.4;
   svg.append(el('rect', { x: X(1.519), y: P.t, width: X(1.94) - X(1.519), height: P.b - P.t, fill: 'rgba(223,37,49,.10)' }));
   svg.append(el('rect', { x: X(1.94), y: P.t, width: X(2.12) - X(1.94), height: P.b - P.t, fill: 'rgba(223,37,49,.04)' }));
   txt(svg, (X(1.519) + X(1.94)) / 2, P.t + 16, 'EXTENSÃO ESPERADA', { f: MONO, s: 11, c: 'rgba(255,90,79,.9)' });
   const path = f => { let d = ''; for (let l = L0; l <= L1; l += .005) { const v = f(l); d += (d ? 'L' : 'M') + X(l).toFixed(1) + ' ' + Y(v).toFixed(1); if (v > Y1) break; } return d; };
   svg.append(el('path', { d: path(vela), fill: 'none', stroke: W + '.8)', 'stroke-width': 2.2 }));
+  svg.append(el('path', { d: path(vapor), fill: 'none', stroke: 'rgba(255,90,79,.6)', 'stroke-width': 1.8, 'stroke-dasharray': '6 5' }));
   svg.append(el('path', { d: path(ativa), fill: 'none', stroke: '#FF3B3B', 'stroke-width': 2.6 }));
   for (const [l, r, c, dx, oco] of [[1.519, 'vela · λ ≈ 1,5', '#fff', -8, 0], [1.94, 'ativa, líquido · λ = 1,94', '#FF5A4F', -8, 0], [2.12, 'vaporizado · 2,12', 'rgba(255,90,79,.75)', 8, 1]]) {
     svg.append(el('circle', { cx: X(l), cy: Y(5), r: 5, fill: oco ? 'none' : c, stroke: c, 'stroke-width': 1.6 }));
