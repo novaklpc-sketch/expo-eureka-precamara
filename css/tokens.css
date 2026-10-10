@@ -34,7 +34,7 @@
   --fs-h1:clamp(40px,24px + 2.2vw,56px);
   --fs-h2:clamp(28px,18px + 1.6vw,40px);
   --fs-lead:clamp(16px,15px + .25vw,18px);
-  --fs-body:clamp(15px,14.5px + .15vw,16px);
+  --fs-body:16px;   /* base 16 px em todo aparelho (era 15 px no celular) */
   --fs-lab:12px;
   --fs-stat:clamp(40px,28px + 1.6vw,56px);
   --lh-text:1.65;
@@ -48,7 +48,7 @@
   --bar-h:64px;
   --max:1280px;
   --tap:44px;
-  --text-4:#7c7c7c; --red-soft:rgba(223,37,49,.14); --focus:#ffffff; --shadow-card:0 30px 80px rgba(0,0,0,.6);
+  --text-4:#868686;   /* 5,1:1 sobre os cartões (AA); #7c7c7c dava 4,4:1 */ --red-soft:rgba(223,37,49,.14); --focus:#ffffff; --shadow-card:0 30px 80px rgba(0,0,0,.6);
   --s-4:4px; --s-8:8px; --s-12:12px; --s-16:16px; --s-20:20px; --s-24:24px; --s-32:32px;
   --e-std:cubic-bezier(.2,0,0,1); --fs-meta:13px; --wrap:1384px;                                /* alvo mínimo de toque (iPad) */
 
