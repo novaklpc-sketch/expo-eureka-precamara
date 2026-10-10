@@ -142,9 +142,10 @@ if (!reduced) {
 }
 
 /* ---------- T03 e T06: 3D do CAD (carrega quando a seção se aproxima) ---------- */
-function lazyCad(el, mode, onReady, onFail = () => {}) {
+function lazyCad(el, mode, onReady, onFail = () => {}, onStart = () => {}) {
   new IntersectionObserver(async (es, o) => {
     if (!es.some(e => e.isIntersecting)) return; o.disconnect();
+    onStart();
     let v = null;
     try {
       const { createCadViewer } = await import('./cad.js');
@@ -154,8 +155,11 @@ function lazyCad(el, mode, onReady, onFail = () => {}) {
   }, { rootMargin: '600px 0px' }).observe(el);
 }
 lazyCad($('#cad-t03'), 't03', v => { cad03 = v; v.setStep(step03 || 1); });
-const segBtns = $$('[data-cad]'), seg = $('.seg'), stageCap = $('.stage-cap');
+const segBtns = $$('[data-cad]'), seg = $('.seg'), stageCap = $('.stage-cap'), capPronto = stageCap?.textContent;
 lazyCad($('#cad-t06'), 't06', v => {
+  /* chegou: legenda de uso e controles liberados */
+  if (stageCap) stageCap.textContent = capPronto;
+  segBtns.forEach(b => { b.disabled = false; });
   segBtns.forEach(b => b.addEventListener('click', () => {
     segBtns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     v.setMode(b.dataset.cad);
@@ -164,6 +168,10 @@ lazyCad($('#cad-t06'), 't06', v => {
   /* sem 3D: fica a foto; os controles saem e a legenda deixa de pedir para arrastar */
   seg.hidden = true;
   if (stageCap) stageCap.textContent = 'A pré-câmara usinada. O modelo 3D não está disponível neste aparelho.';
+}, () => {
+  /* carregando (three.js + malha, ~2,4 MB): a legenda avisa e os botões esperam */
+  if (stageCap) stageCap.textContent = 'Carregando o modelo 3D…';
+  segBtns.forEach(b => { b.disabled = true; });
 });
 
 /* ---------- lightbox (foto na resolução do arquivo, nunca ampliada) ---------- */

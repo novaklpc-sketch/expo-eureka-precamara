@@ -72,7 +72,7 @@ export function drawE6(host) {
   svg.append(el('path', { d: path(t => wiebe(t) * 100, Ym), fill: 'none', stroke: '#FF3B3B', 'stroke-width': 3 }));
   [[t10, 10], [t50, 50], [t90, 90]].forEach(([t, f]) => svg.append(el('circle', { cx: X(t), cy: Ym(f), r: 6, fill: '#050505', stroke: '#FF3B3B', 'stroke-width': 2.4 })));
   /* legenda fora das curvas, embaixo */
-  [['Pressão com combustão', '#fff', ''], ['Pressão motorada (sem combustão)', W + '.75)', '8 6'], ['MFB (%)', '#FF3B3B', ''], ['desenvolvimento inicial (0–10 %)', 'rgba(120,180,140,.5)', 'band'], ['queima rápida (10–90 %)', 'rgba(223,37,49,.45)', 'band']]
+  [['Pressão com combustão', '#fff', ''], ['Pressão motorada (sem combustão)', W + '.75)', '8 6'], ['MFB, fração mássica queimada (%)', '#FF3B3B', ''], ['desenvolvimento inicial (0–10 %)', 'rgba(120,180,140,.5)', 'band'], ['queima rápida (10–90 %)', 'rgba(223,37,49,.45)', 'band']]
     .forEach(([t, c, d], i) => {
       const x = 60 + (i % 3) * 380, y = h - 22 + (i < 3 ? -26 : 0);
       if (d === 'band') svg.append(el('rect', { x, y: y - 11, width: 32, height: 10, fill: c }));

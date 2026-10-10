@@ -21,6 +21,15 @@ html[data-present]{overflow:hidden;scroll-behavior:auto;scroll-padding-top:0;tou
 .pc-col{display:block}
 .pc-col i{display:block;height:1.25em;font-style:normal}
 
+/* ---------- aviso da tela de espera e setas das bordas (toque) ---------- */
+.present-warn{position:fixed;left:50%;bottom:max(28px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:56;padding:12px 20px;border-radius:var(--r-pill,999px);background:rgba(10,10,10,.9);border:1px solid var(--line-strong,rgba(255,255,255,.12));color:#fff;font:500 15px/1.3 var(--f-sans,system-ui);white-space:nowrap;animation:p-index .3s var(--e-out,ease)}
+.present-warn[hidden]{display:none}
+.present-edges{position:fixed;inset:0;pointer-events:none;z-index:54;display:none}
+[data-present][data-present-act="1"] .present-edges:not([hidden]){display:block}
+.present-edges span{position:absolute;top:50%;transform:translateY(-50%);font:300 56px/1 var(--f-sans,system-ui);color:rgba(255,255,255,.55);animation:p-edge 2.4s ease-in-out infinite}
+.present-edges span:first-child{left:14px}.present-edges span:last-child{right:14px;animation-delay:1.2s}
+@keyframes p-edge{0%,100%{opacity:.35}50%{opacity:.9}}
+
 /* ---------- fio de progresso: o ato, não a rolagem ---------- */
 [data-present] .progress span{width:var(--present-p,0%)!important;transition:width 450ms var(--e-out,cubic-bezier(.16,1,.3,1))}
 
@@ -74,4 +83,5 @@ html[data-present]{overflow:hidden;scroll-behavior:auto;scroll-padding-top:0;tou
   .present-index[open]{animation:none}
   [data-present] #t00.is-lit.is-attract .impact{animation:none;opacity:1}
   [data-present] .progress span{transition:none}
+  .present-edges span,.present-warn{animation:none}
 }

@@ -7,7 +7,8 @@
 
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const E_OUT = 'cubic-bezier(.16,1,.3,1)', E_INOUT = 'cubic-bezier(.77,0,.175,1)';
-const IDLE_MS = 90000, ENTER_MS = 900, TAP_MS = 300;
+const IDLE_MS = 180000, WARN_MS = 10000, HELP_MS = 6000, HELP_BACK_MS = 20000, ENTER_MS = 900, TAP_MS = 300;
+const TOUCH = matchMedia('(hover: none)').matches || navigator.maxTouchPoints > 0;
 /* elementos que têm gesto próprio (arrastar, girar, ponteiro) */
 const OWN = 'input[type=range], .cmp-stage, .cad, #lean-chart';
 /* toque nesses não vira navegação */
@@ -24,7 +25,7 @@ export function initPresent({ reduced = false } = {}) {
   let on = false, cur = 0, busy = false, queued = null, fsByUs = false;
   const step = new Map();                      // passo atual de cada seção scrolly
   const enterTimers = new Map();
-  let idleT = 0, helpT = 0;
+  let idleT = 0, warnT = 0, helpT = 0, helpBackT = 0, warn = null, edges = null;
 
   /* ---------- medidas ---------- */
   const topOf = el => el.getBoundingClientRect().top + scrollY;
@@ -190,8 +191,10 @@ export function initPresent({ reduced = false } = {}) {
     if (isScrolly(acts[i])) { step.set(acts[i], stepWas); place(acts[i], 'keep'); }
     shown = ''; setCount(i, 1);
     arrive(i, 1); markEntering(acts[i]);
-    ui?.classList.remove('is-quiet'); clearTimeout(helpT);
-    helpT = setTimeout(() => ui?.classList.add('is-quiet'), 6000);
+    const help = ui && $('.act-help', ui);
+    if (help && TOUCH) help.textContent = 'Deslize para avançar · toque duplo abre o índice';
+    showHelp();
+    if (TOUCH) { if (!edges) buildEdges(); edges.hidden = false; }
     document.dispatchEvent(new CustomEvent('present:change', { detail: { on: true } }));
     dispatchEvent(new Event('resize'));
     requestAnimationFrame(() => requestAnimationFrame(resnap));   // fontes e imagens que chegam depois
@@ -210,7 +213,8 @@ export function initPresent({ reduced = false } = {}) {
     btn && (btn.textContent = 'Apresentar', btn.setAttribute('aria-pressed', 'false'));
     acts.forEach(x => { x.scrollTop = 0; delete x.dataset.presentStep; $$('.is-pstep', x).forEach(li => li.classList.remove('is-pstep')); });
     t00?.classList.remove('is-attract');
-    clearTimeout(idleT); clearTimeout(helpT);
+    clearTimeout(idleT); clearTimeout(warnT); clearTimeout(helpT); clearTimeout(helpBackT); hideWarn();
+    if (edges) edges.hidden = true;
     if (fsEl()) { fsByUs = true; exitFs(); }
     /* volta à rolagem normal no mesmo ato (no scrolly, com o passo no centro para o observador acender o mesmo) */
     const li = n && $(`.lstep[data-step="${n}"]`, a);
@@ -265,14 +269,35 @@ export function initPresent({ reduced = false } = {}) {
   }
   function closeIndex() { if (dlg?.open) dlg.close ? dlg.close() : dlg.removeAttribute('open'); }
 
-  /* ---------- tela de espera (90 s sem toque) ---------- */
-  function armIdle() {
-    clearTimeout(idleT);
-    if (on) idleT = setTimeout(attract, IDLE_MS);
+  /* ---------- dica de uso: visível 6 s; volta sozinha depois de 20 s sem interação ---------- */
+  function showHelp() {
+    ui?.classList.remove('is-quiet'); clearTimeout(helpT);
+    helpT = setTimeout(() => ui?.classList.add('is-quiet'), HELP_MS);
   }
+  function armHelpBack() {
+    clearTimeout(helpBackT);
+    if (on) helpBackT = setTimeout(() => { if (on) showHelp(); }, HELP_BACK_MS);
+  }
+  function buildEdges() {             // setas discretas nas bordas (toque), só no primeiro ato
+    edges = document.createElement('div'); edges.className = 'present-edges'; edges.setAttribute('aria-hidden', 'true');
+    edges.innerHTML = '<span>‹</span><span>›</span>'; document.body.append(edges);
+  }
+
+  /* ---------- tela de espera: 3 min sem toque; nos 10 s finais um aviso que qualquer toque cancela ---------- */
+  function armIdle() {
+    clearTimeout(idleT); clearTimeout(warnT); hideWarn();
+    if (on) idleT = setTimeout(showWarn, IDLE_MS - WARN_MS);
+  }
+  function showWarn() {
+    if (!on) return;
+    if (!warn) { warn = document.createElement('div'); warn.className = 'present-warn'; warn.setAttribute('role', 'status'); document.body.append(warn); }
+    warn.textContent = 'Voltando ao início em 10 s. Toque para continuar.'; warn.hidden = false;
+    warnT = setTimeout(attract, WARN_MS);
+  }
+  function hideWarn() { if (warn) warn.hidden = true; }
   function attract() {
     if (!on) return;
-    closeIndex();
+    hideWarn(); closeIndex();
     const lit = () => setTimeout(() => { if (on && cur === 0) t00?.classList.add('is-attract'); }, 2600);   // depois da entrada completa
     if (cur !== 0) go(0, { dir: -1 }).then(lit); else lit();
   }
@@ -280,9 +305,10 @@ export function initPresent({ reduced = false } = {}) {
   const poke = () => {                  // rearma no máximo uma vez por segundo: o pointermove chega às dezenas por segundo
     if (!on) return;
     if (t00?.classList.contains('is-attract')) t00.classList.remove('is-attract');
+    if (warn && !warn.hidden) armIdle();   // aviso na tela: qualquer toque cancela na hora
     const now = performance.now();
     if (now - pokedAt < 1000) return;
-    pokedAt = now; armIdle();
+    pokedAt = now; armIdle(); armHelpBack();
   };
   ['keydown', 'pointerdown', 'pointermove', 'wheel', 'touchstart'].forEach(t => addEventListener(t, poke, { passive: true, capture: true }));
 
