@@ -127,7 +127,8 @@ if (!reduced) {
   const plate = $('.t05-plate', t05);
   let top05 = 0, h05 = 1;   // medidas guardadas no redimensionamento: a rolagem não lê o layout (evita reflow forçado a cada evento)
   const measure05 = () => { const r = t05.getBoundingClientRect(); top05 = r.top + scrollY; h05 = r.height; };
-  measure05(); addEventListener('resize', measure05); addEventListener('load', measure05, { once: true });
+  measure05(); addEventListener('resize', measure05);
+  new ResizeObserver(measure05).observe(document.body);   // qualquer mudança de altura acima da T05 (fontes, tabela do λ, 3D) remede
   const p05 = () => {
     const f = 1 - (top05 - scrollY + h05) / (innerHeight + h05);
     if (f < 0 || f > 1) return;

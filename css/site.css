@@ -217,7 +217,7 @@ text.lean-note{font-size:11.5px;fill:var(--text-3)}
 .cmp-handle{position:absolute;top:50%;left:var(--pos);width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(10,10,10,.75);border:2px solid var(--red);box-shadow:0 0 18px rgba(223,37,49,.6);z-index:3;pointer-events:none}
 .cmp-handle::before{content:"‹ ›";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:600 15px/1 var(--f-sans)}
 .cmp-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;z-index:4;touch-action:pan-y}
-.cmp-range:focus-visible+.cmp-handle{outline:2px solid var(--focus);outline-offset:4px}   /* o campo é invisível: o anel de foco vai no cabo */
+.cmp-range:focus-visible+.cmp-handle{outline:2px solid var(--focus);outline-offset:3px}   /* o campo é invisível: o anel de foco vai no cabo */
 .cmp .cap{margin-top:10px}
 .spec dl{margin-top:14px}
 .spec dl div{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:8px 0;border-top:1px solid var(--line)}
