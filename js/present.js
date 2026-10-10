@@ -317,8 +317,8 @@ export function initPresent({ reduced = false } = {}) {
   /* ---------- trackpad e roda do mouse: um gesto, um passo ---------- */
   let wAcc = 0, wLockUntil = 0, wQuietT = 0, wLocked = false;
   /* wheel e touchmove são não passivos: só ficam registrados com o modo ligado (fora dele a rolagem normal não espera o JS) */
-  const onWheel = e => {
-    if (!on || (e.target instanceof Element && e.target.closest('.cad'))) return;
+  const onWheel = e => {               // só existe com o modo ligado (bindBlocking)
+    if (e.target instanceof Element && e.target.closest('.cad')) return;
     e.preventDefault();
     const now = performance.now();
     clearTimeout(wQuietT);
@@ -331,7 +331,7 @@ export function initPresent({ reduced = false } = {}) {
     wAcc = 0; wLocked = true; wLockUntil = now + 700;
   };
   const onTouchMove = e => {
-    if (on && t0 && !t0.own && e.cancelable) e.preventDefault();   // a página não rola sozinha no modo apresentação
+    if (t0 && !t0.own && e.cancelable) e.preventDefault();   // a página não rola sozinha no modo apresentação
   };
   const bindBlocking = () => { addEventListener('wheel', onWheel, { passive: false }); addEventListener('touchmove', onTouchMove, { passive: false }); };
   const unbindBlocking = () => { removeEventListener('wheel', onWheel); removeEventListener('touchmove', onTouchMove); };

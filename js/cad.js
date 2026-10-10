@@ -10,14 +10,13 @@
  * Uso: const v = await createCadViewer(el, { mode:'t06', reduced, onFail }); v?.setMode('corte');
  */
 import * as THREE from '../assets/vendor/three.module.js';
-import { easeOut, easeInOut } from './ease.js';
+import { easeOut, easeInOut, clamp } from './util.js';
 
 const MALHA = new URL('../assets/pre-camara-cad.bin', import.meta.url).href;
 // paleta das luzes (nunca azul)
 const COR = { faisca: '#FFF4EC', coral: '#FF5A4F', vermelho: '#DF2531', calor: '#FF7A2F', ambar: '#FFB23F', spray: '#F4F2EE' };
 const SVGNS = 'http://www.w3.org/2000/svg';
 const DEG = Math.PI / 180;
-const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 
 // ── malha: leitura, centro, eixo longo em x, ponta em +x, tomada da vela em +y ──

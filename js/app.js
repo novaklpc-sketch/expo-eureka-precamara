@@ -1,6 +1,6 @@
 /* atlas-v7 · orquestra a página. Cada tela tem seu bloco; módulos pesados (3D, modo apresentação) entram por import dinâmico. */
 import { initLean } from './lean.js';
-import { easeOut, easeInOut } from './ease.js';
+import { easeOut, easeInOut } from './util.js';
 
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -92,9 +92,12 @@ t03.addEventListener('present:step', e => setStep03(e.detail.step));
 const cmp = $('#cmp'), range = $('.cmp-range', cmp);
 const setPos = v => cmp.style.setProperty('--pos', v + '%');
 range.addEventListener('input', () => setPos(range.value));
+let dragged = false;   // depois de um arraste, o deslize automático só volta quando o cursor sai do palco
 if (finePointer) {
-  $('.cmp-stage', cmp).addEventListener('pointermove', e => {
-    if (e.buttons) return;
+  const stage = $('.cmp-stage', cmp);
+  stage.addEventListener('pointerleave', () => { dragged = false; });
+  stage.addEventListener('pointermove', e => {
+    if (e.buttons || dragged) return;
     const r = e.currentTarget.getBoundingClientRect(), f = (e.clientX - r.left) / r.width;
     if (f < .25) animatePos(78); else if (f > .75) animatePos(22);
   });
@@ -112,7 +115,7 @@ function animatePos(to, dur = 500) {
   };
   posAnim = requestAnimationFrame(tick);
 }
-range.addEventListener('pointerdown', () => { cancelAnimationFrame(posAnim); posAnim = 0; posTarget = null; });
+range.addEventListener('pointerdown', () => { cancelAnimationFrame(posAnim); posAnim = 0; posTarget = null; dragged = true; });
 new IntersectionObserver((es, o) => es.forEach(e => {
   if (!e.isIntersecting) return; o.disconnect();
   if (!reduced) { animatePos(64, 600); setTimeout(() => animatePos(50, 600), 700); }

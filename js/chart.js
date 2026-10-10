@@ -5,7 +5,7 @@
  * ou pelo ponteiro. Nenhum valor é medido neste trabalho: o comportamento é qualitativo.
  */
 const L0=0.9,L1=1.75;
-const clip=(v,a,b)=>Math.min(b,Math.max(a,v));
+import {clamp} from './util.js';
 export const curves={
  eta:l=>34+9.5*(l-0.9)-260*Math.max(0,l-1.42)**2,
  nox:l=>100*Math.exp(-((l-1.08)**2)/(2*0.11**2)),
@@ -13,7 +13,7 @@ export const curves={
 };
 // limite de operação estável: primeiro λ em que o CoV cruza 5 %
 export const LIMIT=(()=>{let l=L0;while(l<L1&&curves.cov(l)<5)l+=.0005;return +l.toFixed(3)})();
-export const lambdaAt=p=>0.95+clip(p,0,1)*(1.72-0.95);
+export const lambdaAt=p=>0.95+clamp(p,0,1)*(1.72-0.95);
 
 const SVGNS='http://www.w3.org/2000/svg';
 export const el=(n,a={},t)=>{const e=document.createElementNS(SVGNS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e};
@@ -36,7 +36,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   const left=small()?44:56,right=small()?14:26,top=small()?54:62,bottom=34,gap=small()?26:30;
   const ph=(H-top-bottom-gap*(panels.length-1))/panels.length;
   plot={left,right,top,bottom,gap,ph,x:l=>left+(l-L0)/(L1-L0)*(W-left-right)};
-  panels.forEach((p,i)=>{p.y0=top+i*(ph+gap);p.y1=p.y0+ph;p.y=v=>p.y1-(clip(v,p.min,p.max)-p.min)/(p.max-p.min)*ph});
+  panels.forEach((p,i)=>{p.y0=top+i*(ph+gap);p.y1=p.y0+ph;p.y=v=>p.y1-(clamp(v,p.min,p.max)-p.min)/(p.max-p.min)*ph});
   draw();
  }
  function pathFor(p){
@@ -93,7 +93,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   host.dataset.lambda=l.toFixed(2);
  }
  // prancha estática (cortina do ato I): só desenha, sem teclado, ponteiro ou região viva
- if(isStatic){new ResizeObserver(layout).observe(host);layout();return {setLambda(l){lambda=clip(l,L0,L1);update()},setProgress(p){lambda=lambdaAt(p);update()}}}
+ if(isStatic){new ResizeObserver(layout).observe(host);layout();return {setLambda(l){lambda=clamp(l,L0,L1);update()},setProgress(p){lambda=lambdaAt(p);update()}}}
  // teclado: setas movem λ (Shift acelera), Home/End vão aos extremos; a leitura é anunciada após uma pausa
  host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','Gráfico interativo do limite pobre. Use as setas para mover o fator lambda.');
  const live=document.createElement('p');live.className='sr-only';live.setAttribute('role','status');host.after(live);
@@ -103,12 +103,12 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   const step=e.shiftKey?.1:.01;let l=pointerLambda??lambda;
   if(e.key==='ArrowRight'||e.key==='ArrowUp')l+=step;else if(e.key==='ArrowLeft'||e.key==='ArrowDown')l-=step;
   else if(e.key==='Home')l=L0;else if(e.key==='End')l=L1;else return;
-  e.preventDefault();e.stopPropagation();pointerLambda=clip(l,L0,L1);update();announce();ping();
+  e.preventDefault();e.stopPropagation();pointerLambda=clamp(l,L0,L1);update();announce();ping();
  });
  host.addEventListener('blur',()=>{pointerLambda=null;update();ping()});
  // ponteiro: move o cursor enquanto estiver sobre o gráfico; avisa quem quiser acompanhar (volta ao texto)
  const ping=()=>{if(onPointer)onPointer(pointerLambda)};
- const toLambda=e=>{const r=svg.getBoundingClientRect();return clip(L0+((e.clientX-r.left)/r.width*W-plot.left)/(W-plot.left-plot.right)*(L1-L0),L0,L1)};
+ const toLambda=e=>{const r=svg.getBoundingClientRect();return clamp(L0+((e.clientX-r.left)/r.width*W-plot.left)/(W-plot.left-plot.right)*(L1-L0),L0,L1)};
  svg.addEventListener('pointermove',e=>{pointerLambda=toLambda(e);update();ping()});
  svg.addEventListener('pointerleave',()=>{pointerLambda=null;update();ping()});
  svg.addEventListener('touchstart',e=>{if(e.touches[0]){pointerLambda=toLambda(e.touches[0]);update();ping()}},{passive:true});
@@ -118,7 +118,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  layout();
  return {
   setProgress(p){lambda=lambdaAt(p);update()},
-  setLambda(l){lambda=clip(l,L0,L1);update()},
+  setLambda(l){lambda=clamp(l,L0,L1);update()},
   // chegada guiada pelo texto: anel nos pontos e leve fade nos valores (CSS); cursor vermelho enquanto o texto guia
   pulse(){const g=layers.group;if(!g)return;g.classList.remove('is-arrive');void svg.getBoundingClientRect();g.classList.add('is-arrive')},
   setDriver(d){svg.classList.toggle('is-text',d==='text')},

@@ -345,6 +345,21 @@ text.lean-note{font-size:11.5px;fill:var(--text-3)}
   .grid4{grid-template-columns:1fr 1fr}
   .phases{grid-template-columns:repeat(3,1fr)}
   .t06-grid{grid-template-columns:1fr}
+  /* celular e tablet em pé: o fundo ocupa uma tela de altura (e não a seção inteira) e some para o preto nos últimos 22 % do bloco;
+     evita esticar a imagem 4–9×. O fade é em % do bloco, para valer igual com vh (reserva) ou svh */
+  .sec{--fade:linear-gradient(180deg,transparent 78%,var(--bg) 100%);background-size:auto 100vh;background-size:auto 100svh;background-position:top center}
+  #t01{background-image:var(--fade),url(../assets/bg/t01.webp)}
+  #t02{background-image:var(--fade),url(../assets/bg/t02.webp)}
+  #t03{background-image:var(--fade),url(../assets/bg/t03.webp)}
+  #t04{background-image:var(--fade),radial-gradient(80% 40% at 80% 30%,rgba(223,37,49,.18),transparent 70%)}
+  /* T06: o fundo vai no palco do 3D (altura do palco, ~1,5× num ecrã 3×), com o chão exatamente sob a peça */
+  #t06{background-image:none}
+  .t06-stage{background:linear-gradient(180deg,var(--bg) 0%,transparent 22%,transparent 80%,var(--bg) 100%),url(../assets/bg/t06.webp) center/auto 100% no-repeat}
+  #t07{background-image:var(--fade),linear-gradient(180deg,rgba(5,5,5,.85) 0%,rgba(5,5,5,.6) 40%,rgba(5,5,5,.15) 100%),url(../assets/bg/t07.webp)}
+  #t08{background-image:var(--fade),url(../assets/bg/t08.webp)}
+  #t10{background-image:var(--fade),url(../assets/bg/t10.webp)}
+  /* T05: a chapa do F1 é uma <img>; também fica com uma tela de altura e some para baixo */
+  .t05-plate{width:100%;height:100vh;height:100svh;max-height:100%;object-position:50% 30%;-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
 }
 @media (max-width:820px){
   :root{--bar-h:58px}
@@ -380,7 +395,6 @@ text.lean-note{font-size:11.5px;fill:var(--text-3)}
   .timeline{grid-template-columns:1fr;margin-top:40px}
   .timeline::before,.tl::before,.tl::after{display:none}
   .t05-bg::after{background:linear-gradient(0deg,rgba(5,5,5,.97) 0%,rgba(5,5,5,.7) 55%,rgba(5,5,5,.2) 80%)}
-  .t05-plate{width:100%;object-position:50% 30%;-webkit-mask-image:none;mask-image:none}
   .phases{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding-bottom:10px;margin-inline:calc(-1*var(--gutter));padding-inline:var(--gutter)}
   .phases li{flex:0 0 72%;scroll-snap-align:center}
   .progress-bar{grid-template-columns:repeat(6,1fr)}
@@ -389,18 +403,6 @@ text.lean-note{font-size:11.5px;fill:var(--text-3)}
   .t10-grid{grid-template-columns:1fr;gap:28px}
   .t06-side{order:-1}
   .t06-grid{display:flex;flex-direction:column}
-  /* celular: o fundo ocupa uma tela de altura (e não a seção inteira) e some para o preto; evita esticar a imagem 5–9× num ecrã 3× */
-  .sec{--fade:linear-gradient(180deg,transparent calc(100vh - 180px),var(--bg) 100vh);--fade:linear-gradient(180deg,transparent calc(100svh - 180px),var(--bg) 100svh);background-size:auto 100vh;background-size:auto 100svh;background-position:top center}
-  #t01{background-image:var(--fade),url(../assets/bg/t01.webp)}
-  #t02{background-image:var(--fade),url(../assets/bg/t02.webp)}
-  #t03{background-image:var(--fade),url(../assets/bg/t03.webp)}
-  #t04{background-image:var(--fade),radial-gradient(80% 40% at 80% 30%,rgba(223,37,49,.18),transparent 70%)}
-  /* T06: o fundo vai no palco do 3D (altura do palco, ~1,5× num ecrã 3×), com o chão exatamente sob a peça */
-  #t06{background-image:none}
-  .t06-stage{background:linear-gradient(180deg,var(--bg) 0%,transparent 22%,transparent 80%,var(--bg) 100%),url(../assets/bg/t06.webp) center/auto 100% no-repeat}
-  #t07{background-image:var(--fade),linear-gradient(180deg,rgba(5,5,5,.85) 0%,rgba(5,5,5,.6) 40%,rgba(5,5,5,.15) 100%),url(../assets/bg/t07.webp)}
-  #t08{background-image:var(--fade),url(../assets/bg/t08.webp)}
-  #t10{background-image:var(--fade),url(../assets/bg/t10.webp);background-position:top center}
   .authors li{font-size:17px;gap:12px}
   .award{margin-top:0}
   .inst{margin-top:48px}
