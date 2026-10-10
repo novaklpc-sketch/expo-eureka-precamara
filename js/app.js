@@ -175,9 +175,17 @@ lazyCad($('#cad-t06'), 't06', v => {
 });
 
 /* ---------- lightbox (foto na resolução do arquivo, nunca ampliada) ---------- */
-const lb = $('#lightbox'), lbImg = $('img', lb);
+const lb = $('#lightbox'), lbImg = $('img', lb), lbStatus = $('.lb-status', lb);
+/* estados: carregando (texto depois de 300 ms, para não piscar em rede rápida) → foto; ou erro, com saída */
+let lbT = 0;
+const lbSet = (txt) => { clearTimeout(lbT); lbStatus.textContent = txt || ''; lbStatus.hidden = !txt; };
+lbImg.addEventListener('load', () => { lbSet(''); lb.classList.remove('is-loading'); });
+lbImg.addEventListener('error', () => { lb.classList.remove('is-loading'); lbSet('A foto não carregou. Toque fora da imagem para fechar e tente de novo.'); });
 $$('[data-lightbox]').forEach(b => b.addEventListener('click', () => {
-  lbImg.src = b.dataset.lightbox; lbImg.alt = b.dataset.alt || '';
+  lbSet(''); lb.classList.add('is-loading');
+  lbImg.removeAttribute('src'); lbImg.alt = b.dataset.alt || '';
+  lbT = setTimeout(() => { if (lb.classList.contains('is-loading')) lbSet('Carregando a foto…'); }, 300);
+  lbImg.src = b.dataset.lightbox;
   lb.showModal();
 }));
 $('.lb-close', lb).addEventListener('click', () => lb.close());

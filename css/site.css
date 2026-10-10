@@ -49,6 +49,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .btn-glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);color:#fff;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
 .btn-line{border:1px solid rgba(255,255,255,.35);color:#fff}
 @media (hover:hover) and (pointer:fine){.btn:hover{filter:brightness(1.15)}.btn-glass:hover,.btn-line:hover{border-color:#fff}}
+/* estado pressionado: resposta imediata ao toque/clique, antes de qualquer navegação */
+.btn:active,.phase:active,.photo-card:active,.tabs a:active,.tabs button:active,.in:active,.to-top:active,.seg button:active{transform:scale(.97);filter:brightness(.92)}
 .ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:28px}
 .chip{display:inline-flex;align-items:center;gap:10px;height:36px;padding:0 16px;border-radius:var(--r-pill);font:400 13px/1 var(--f-mono);letter-spacing:.12em;color:#eee;border:1px solid rgba(255,255,255,.2);background:rgba(10,10,10,.55);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);text-decoration:none;width:max-content}
 .chip-dot::before,.chip-live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red)}
@@ -339,7 +341,10 @@ text.lean-note{font-size:11.5px;fill:var(--text-3)}
 /* ---------- lightbox e índice ---------- */
 .lightbox{max-width:min(96vw,1400px);max-height:94vh;padding:0;border:0;background:transparent;overflow:visible}
 .lightbox::backdrop{background:rgba(0,0,0,.88);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.lightbox img{max-width:min(96vw,1400px);max-height:90vh;width:auto;height:auto;border-radius:12px}
+.lightbox img{max-width:min(96vw,1400px);max-height:90vh;width:auto;height:auto;border-radius:12px;transition:opacity var(--d-base)}
+.lightbox.is-loading img{opacity:0;min-width:min(60vw,560px);min-height:40vh}
+.lb-status{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 18px;border-radius:var(--r-pill);background:rgba(10,10,10,.85);border:1px solid var(--line-strong);color:#fff;font-size:13px;letter-spacing:.06em;white-space:nowrap}
+.lb-status[hidden]{display:none}
 .lb-close{position:absolute;top:-14px;right:-14px;width:44px;height:44px;border-radius:50%;background:#fff;color:#000;font-size:26px;line-height:1}
 .tabs,.toc{display:none}
 .present-ui{display:none}
