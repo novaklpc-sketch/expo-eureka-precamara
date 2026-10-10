@@ -69,8 +69,14 @@ if (finePointer && !reduced) {
   });
 }
 
+/* ---------- fundos e gráficos adiados: cada seção carrega o seu quando chega a 900 px da tela ---------- */
+const nearIO = new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-near'); o.unobserve(e.target); } }), { rootMargin: '900px 0px' });
+$$('.sec').forEach(s => nearIO.observe(s));
+document.addEventListener('present:change', e => { if (e.detail.on) $$('.sec').forEach(s => s.classList.add('is-near')); });   // no modo apresentação os atos trocam sem rolagem
+const whenNear = (el, fn, margin = '1000px 0px') => new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { o.disconnect(); fn(); } }, { rootMargin: margin }).observe(el);
+
 /* ---------- T02: gráfico λ real (componente do atlas-v6) ---------- */
-initLean($('#t02'), { reduced });
+whenNear($('#t02'), () => initLean($('#t02'), { reduced }));
 
 /* ---------- T03: passos ↔ figura (quadros ilustrativos; o 3D do CAD assume quando carregar) ---------- */
 const t03 = $('#t03'), t03steps = $$('.lstep', t03), frames = $$('.cut-frame', t03), dots = $$('.dots i', t03);
@@ -198,7 +204,7 @@ $$('a', toc).forEach(a => a.addEventListener('click', () => { toc.hidden = true;
 document.addEventListener('click', e => { if (!toc.hidden && !toc.contains(e.target) && !tocBtn.contains(e.target)) { toc.hidden = true; tocBtn.setAttribute('aria-expanded', 'false'); } });
 
 /* ---------- gráficos vivos da T08 (tendência E5 e pressão/MFB E6) ---------- */
-import('./charts.js').then(m => { m.drawE5($('#chart-e5')); m.drawE6($('#chart-e6')); }).catch(() => {});
+whenNear($('#t08'), () => import('./charts.js').then(m => { m.drawE5($('#chart-e5')); m.drawE6($('#chart-e6')); }).catch(err => console.warn('gráficos da T08 indisponíveis, ficam as imagens:', err)));
 
 /* ---------- modo apresentação ---------- */
 import('./present.js').then(m => m.initPresent({ reduced })).catch(err => console.warn('modo apresentação indisponível', err));

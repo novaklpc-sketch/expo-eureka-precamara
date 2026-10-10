@@ -89,6 +89,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .card.is-chosen{border-color:rgba(255,90,79,.45)}
 .card.is-chosen::before{content:"";position:absolute;left:-1px;top:16px;bottom:16px;width:2px;background:var(--red);border-radius:2px}
 
+/* fundos das seções só baixam quando a seção se aproxima (js/app.js põe .is-near a 900 px); o !important vence os ids acima.
+   Sem JS (html.no-js) tudo carrega como antes. */
+html:not(.no-js) .sec:not(.is-near){background-image:none!important}
+html:not(.no-js) #t06:not(.is-near) .t06-stage{background-image:none!important}
+
 /* revelação */
 .rv{opacity:0;transition:opacity var(--d-reveal) var(--e-out);transition-delay:calc(var(--i,0) * var(--stagger))}   /* só esmaece: o único movimento orquestrado é a entrada (feixe e jatos) */
 .rv.is-in{opacity:1}
