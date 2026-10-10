@@ -49,7 +49,7 @@ html[data-present]{overflow:hidden;scroll-behavior:auto;scroll-padding-top:0;tou
 
 /* ---------- ao chegar: a entrada do ato roda de novo, encurtada a 60 % ---------- */
 [data-present] .act.is-entering .rv.is-in{animation:p-rise calc(var(--d-reveal,600ms) * .6) var(--e-out,cubic-bezier(.16,1,.3,1)) both;animation-delay:calc(var(--i,0) * var(--stagger,70ms) * .6 + 120ms)}
-@keyframes p-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes p-rise{from{opacity:0}to{opacity:1}}
 
 /* ---------- tela de espera: o impacto do feixe pulsa a cada 8 s ---------- */
 [data-present] #t00.is-lit.is-attract .impact{animation:impact 1.2s var(--e-out,cubic-bezier(.16,1,.3,1)) .8s both,p-attract 8s var(--e-out,cubic-bezier(.16,1,.3,1)) infinite}
