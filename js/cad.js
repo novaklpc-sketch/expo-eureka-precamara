@@ -260,12 +260,15 @@ export async function createCadViewer(container, opts = {}) {
     const elipse = (id, k) => `<ellipse cx="${fmt(camara.x)}" cy="${fmt(camara.y)}" rx="${fmt(rx * k)}" ry="${fmt(ry * k)}" transform="rotate(${fmt(ang)} ${fmt(camara.x)} ${fmt(camara.y)})" fill="url(#${id})"/>`;
 
     // passo 1: rótulos com linhas finas brancas
+    // quadro estreito (celular): rótulos curtos e menores, senão não cabem dois por linha
+    const curto = W < 520;
+    ov.classList.toggle('cadv-estreito', curto);
     s1 = rotulos([
-      { txt: 'Passagem axial: injetor auxiliar', p: P(new THREE.Vector3(xBase + L * .1, 0, 0)), lado: 'baixo' },
-      { txt: 'Volume da pré-câmara', p: camara, lado: 'baixo' },
-      { txt: 'Tomada lateral: vela de ignição', p: tomF, lado: 'cima' },
-      { txt: 'Orifícios de passagem', p: { x: anel.x - py * rAnel * .9, y: anel.y - px * rAnel * .9 }, lado: 'cima' },
-    ], W, H);
+      { txt: curto ? 'Injetor auxiliar (eixo)' : 'Passagem axial: injetor auxiliar', p: P(new THREE.Vector3(xBase + L * .1, 0, 0)), lado: 'baixo' },
+      { txt: curto ? 'Volume' : 'Volume da pré-câmara', p: camara, lado: 'baixo' },
+      { txt: curto ? 'Vela (tomada lateral)' : 'Tomada lateral: vela de ignição', p: tomF, lado: 'cima' },
+      { txt: curto ? 'Orifícios' : 'Orifícios de passagem', p: { x: anel.x - py * rAnel * .9, y: anel.y - px * rAnel * .9 }, lado: 'cima' },
+    ], W, H, curto);
 
     // leque de 5 orifícios (±20° em torno do eixo), com origem na cúpula
     const leque = [-20, -10, 0, 10, 20].map((a, i) => {
@@ -331,18 +334,21 @@ export async function createCadViewer(container, opts = {}) {
 
   // rótulos: linha fina do ponto até uma faixa acima ou abaixo da peça, sem sobreposição entre eles
   let medidor = null;
-  function largura(txt) {
+  function largura(txt, curto) {
     medidor = medidor || document.createElement('canvas').getContext('2d');
-    medidor.font = '12px Geist, "Geist Local", system-ui, sans-serif';
+    medidor.font = (curto ? '11px' : '12px') + ' Geist, "Geist Local", system-ui, sans-serif';
     return medidor.measureText(txt).width * 1.08; // folga: a Geist pode carregar depois da medida
   }
-  function rotulos(lista, W, H) {
+  function rotulos(lista, W, H, curto = false) {
     // silhueta projetada da peça (caixa) para saber onde ficam as faixas
     let top = Infinity, bot = -Infinity;
     for (const x of [xBase, 0, xTip]) for (const y of [-malha.rMax, malha.rMax]) for (const z of [-malha.rMax, 0]) {
       const p = projetar(new THREE.Vector3(x, y, z)); top = Math.min(top, p.y); bot = Math.max(bot, p.y);
     }
-    const faixas = { cima: [top - 14, top - 32, top - 50], baixo: [bot + 22, bot + 40, bot + 58] };
+    // três linhas distintas acima e abaixo da peça; num quadro baixo, as linhas sobem/descem em bloco em vez de
+    // colapsarem na borda (era o que sobrepunha dois rótulos na mesma linha no celular)
+    const passo = curto ? 15 : 18, c0 = Math.max(top - 14, 14 + 2 * passo), b0 = Math.min(bot + 22, H - 6 - 2 * passo);
+    const faixas = { cima: [c0, c0 - passo, c0 - 2 * passo], baixo: [b0, b0 + passo, b0 + 2 * passo] };
     // segmento × caixa (amostragem simples: os segmentos são curtos)
     const cruza = (g, c) => { for (let i = 1; i < 12; i++) { const t = i / 12, x = lerp(g.x0, g.x1, t), y = lerp(g.y0, g.y1, t); if (x > c.x0 && x < c.x1 && y > c.y0 && y < c.y1) return true; } return false; };
     // posiciona na ordem dada; conta quantos rótulos ficaram sem lugar livre
@@ -350,7 +356,7 @@ export async function createCadViewer(container, opts = {}) {
       const caixas = [], guias = [], res = [];
       let falhas = 0;
       for (const r of ordemRot) {
-        const tw = largura(r.txt), ordem = r.lado === 'cima' ? ['cima', 'baixo'] : ['baixo', 'cima'];
+        const tw = largura(r.txt, curto), ordem = r.lado === 'cima' ? ['cima', 'baixo'] : ['baixo', 'cima'];
         const xs = [r.p.x - tw / 2, W - 8 - tw, 8, r.p.x - tw + 10, r.p.x - 10].map(x => clamp(x, 8, Math.max(8, W - 8 - tw)));
         let ok = null;
         for (const lado of ordem) for (const y of faixas[lado]) for (const x0 of xs) {
@@ -593,6 +599,7 @@ function estiloOverlay() {
 .cadv-passo{opacity:0;transition:opacity .5s ease}
 .cadv-passo.on{opacity:1}
 .cadv-sem-mov .cadv-passo{transition:none}
+.cadv-estreito .cadv-rot{font-size:11px}
 .cadv-rot{font:400 12px/1 Geist,"Geist Local",system-ui,-apple-system,"Segoe UI",sans-serif;fill:rgba(255,255,255,.8);letter-spacing:.01em;mix-blend-mode:normal}
 .cadv-guia{stroke:rgba(255,255,255,.7);stroke-width:1;fill:none}
 .cadv-ponto{fill:#fff}
