@@ -238,7 +238,7 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .cad-fallback{position:absolute;inset:8% 4%;width:92%;height:84%;object-fit:contain;border-radius:var(--r-sm)}
 .cad.cad-ready .cad-fallback{display:none}
 .cad canvas{position:absolute;inset:0;width:100%!important;height:100%!important}
-.stage-cap{position:absolute;left:24px;bottom:72px}
+.stage-cap{position:absolute;left:24px;bottom:72px;color:var(--text-1);background:rgba(5,5,5,.6);padding:6px 12px;border-radius:8px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .seg[hidden]{display:none}
 .seg{align-self:center;display:inline-flex;padding:4px;border-radius:var(--r-pill);border:1px solid rgba(255,255,255,.22);background:rgba(10,10,10,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .seg button{min-width:110px;min-height:var(--tap);border-radius:var(--r-pill);color:var(--text-3);font-weight:500;transition:color var(--d-fast),background-color var(--d-fast)}
@@ -381,6 +381,7 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
   .just,.lead,.refs li{hyphens:auto;-webkit-hyphens:auto}
   .cmp-stage{aspect-ratio:4/3}
   .spec dl div{grid-template-columns:1fr;gap:2px}
+  .specs div{grid-template-columns:1fr;gap:4px}
   .timeline{grid-template-columns:1fr;margin-top:40px}
   .timeline::before,.tl::before,.tl::after{display:none}
   .t05-bg::after{background:linear-gradient(180deg,rgba(5,5,5,.92) 0%,rgba(5,5,5,.6) 38%,rgba(5,5,5,0) 60%),linear-gradient(0deg,rgba(5,5,5,.97) 0%,rgba(5,5,5,.7) 45%,rgba(5,5,5,0) 72%)}
