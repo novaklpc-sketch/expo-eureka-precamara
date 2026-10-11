@@ -308,6 +308,7 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .inst{margin-top:min(26vh,240px);text-align:center;font-size:14px;color:var(--text-2)}
 
 /* ---------- T11 ---------- */
+#t01,#t10{min-height:auto}
 .t11{background:var(--bg);min-height:auto;padding-bottom:40px}
 .t11::before{display:none}
 .refs{columns:2;column-gap:56px;margin-top:28px}
