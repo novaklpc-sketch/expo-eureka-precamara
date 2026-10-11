@@ -1,5 +1,5 @@
 /* atlas-v7 · modo apresentação (estande: MacBook 1512×982 e iPad 1366×1024).
- * Liga com o botão #present-toggle, a tecla P ou ?apresentar. A página anda de ato em ato:
+ * Modo fixo do estande: liga só com ?apresentar no endereço e não desliga (sem botão, tecla ou Esc). A página anda de ato em ato:
  * cada ato ocupa a tela (present.css) e rola só por dentro, sob controle deste módulo.
  * T02/T03: → avança o passo (centraliza o passo na tela e dispara `present:step`); depois do 4º, o próximo ato.
  * Eventos: `present:step` (na seção, detail {step, act, id}), `present:act` e `present:change` (no document).
@@ -18,7 +18,7 @@ export function initPresent({ reduced = false } = {}) {
   const root = document.documentElement;
   const acts = $$('[data-act]').sort((a, b) => +a.dataset.act - +b.dataset.act);
   const N = acts.length;
-  const btn = $('#present-toggle'), ui = $('.present-ui'), countB = $('.act-count b', ui || document);
+  const ui = $('.present-ui'), countB = $('.act-count b', ui || document);
   const t00 = $('#t00');
   if (!N) return null;
 
@@ -182,7 +182,6 @@ export function initPresent({ reduced = false } = {}) {
     on = true; cur = i;
     bindBlocking();
     root.setAttribute('data-present', '');
-    btn && (btn.textContent = 'Sair', btn.setAttribute('aria-pressed', 'true'));
     acts.forEach(a => { a.scrollTop = 0; });
     snap();
     if (isScrolly(acts[i])) { step.set(acts[i], stepWas); place(acts[i], 'keep'); }
@@ -207,7 +206,6 @@ export function initPresent({ reduced = false } = {}) {
     closeIndex();
     root.removeAttribute('data-present'); delete root.dataset.presentAct;
     root.style.removeProperty('--present-p');
-    btn && (btn.textContent = 'Apresentar', btn.setAttribute('aria-pressed', 'false'));
     acts.forEach(x => { x.scrollTop = 0; delete x.dataset.presentStep; $$('.is-pstep', x).forEach(li => li.classList.remove('is-pstep')); });
     t00?.classList.remove('is-attract');
     clearTimeout(idleT); clearTimeout(warnT); clearTimeout(helpT); clearTimeout(helpBackT); hideWarn();
@@ -220,7 +218,6 @@ export function initPresent({ reduced = false } = {}) {
     document.dispatchEvent(new CustomEvent('present:change', { detail: { on: false } }));
     dispatchEvent(new Event('resize'));
   }
-  const toggle = () => (on ? exit() : enter());
 
   /* ---------- tela cheia ---------- */
   const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
@@ -230,10 +227,7 @@ export function initPresent({ reduced = false } = {}) {
     const f = root.requestFullscreen || root.webkitRequestFullscreen;
     try { f && Promise.resolve(f.call(root)).catch(() => {}); } catch {}
   }
-  const onFs = () => {
-    if (!fsEl() && on && !fsByUs) exit();     // Esc do navegador sai da tela cheia sem avisar a página: sai do modo também
-    fsByUs = false;
-  };
+  const onFs = () => { fsByUs = false; };     // sair da tela cheia (Esc do navegador) não desliga o modo fixo
   document.addEventListener('fullscreenchange', onFs);
   document.addEventListener('webkitfullscreenchange', onFs);
 
@@ -316,7 +310,6 @@ export function initPresent({ reduced = false } = {}) {
     const t = e.target instanceof Element ? e.target : null;
     if (t?.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]')) return;
     const k = e.key;
-    if (k === 'p' || k === 'P') { e.preventDefault(); toggle(); return; }
     if (!on) return;
     const arrowsOwned = t?.closest('#lean-chart, .cad, [role=slider]');
     const isArrow = /^Arrow|^(Home|End)$/.test(k);
@@ -330,7 +323,6 @@ export function initPresent({ reduced = false } = {}) {
     else if (k === '0') act = () => go(9);
     else if (k === '-') act = () => go(10);
     else if (k === 'f' || k === 'F') act = toggleFs;
-    else if (k === 'Escape') act = exit;
     if (!act) return;
     e.preventDefault();
     if (k === ' ' && t?.closest('button, a, summary')) t.blur();   // espaço não aciona o botão focado
@@ -425,8 +417,7 @@ export function initPresent({ reduced = false } = {}) {
   addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(resnap); });
   document.fonts?.ready.then(resnap);
 
-  /* ---------- botão e URL ---------- */
-  btn?.addEventListener('click', e => { e.preventDefault(); toggle(); if (e.detail > 0) btn.blur(); });   // clique do mouse: Enter não desliga sem querer
+  /* ---------- liga pelo endereço ---------- */
   if (new URLSearchParams(location.search).has('apresentar')) {
     const h = location.hash.slice(1), i = acts.findIndex(a => a.id === h);
     enter({ start: i >= 0 ? i : 0 });
