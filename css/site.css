@@ -119,13 +119,6 @@ html:not(.no-js) #t06:not(.is-near) .t06-stage{background-image:none!important}
 .hero-copy{display:flex;flex-direction:column;align-items:flex-start;gap:12px;max-width:600px}
 .hero-copy .h1{margin-top:14px}
 .hero-copy .ctas{margin-top:22px}
-.stats{position:relative;z-index:2;margin-top:32px;display:grid;grid-template-columns:repeat(4,1fr)}
-.stats>div{padding:18px 24px 20px;border-left:1px solid var(--line-strong);position:relative}
-.stats>div:first-child{border-left:0}
-.stats>div::after{content:"";position:absolute;left:24px;bottom:0;width:56px;height:3px;background:var(--red)}
-.stats b{font-size:clamp(26px,1.6vw + 12px,36px);letter-spacing:-.01em}
-.stats .u{font:500 clamp(20px,1vw + 10px,26px) var(--f-mono);color:#fff}
-.stats small{display:block;margin-top:6px;font:400 12px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--text-3)}
 
 /* ---------- T01 ---------- */
 .c90{display:flex;flex-direction:column}
@@ -382,13 +375,6 @@ text.lean-note{font-size:11.5px;fill:var(--text-3)}
     .h1{font-size:34px}
   .ctas .btn{flex:1 1 100%;justify-content:center}
   #t04 .lead{max-width:none}
-  .stats{grid-template-columns:1fr 1fr}
-  .stats>div{padding:16px 16px 18px;white-space:nowrap}
-  .stats>div::after{left:16px}
-  .stats b{font-size:24px}
-  .stats .u{font-size:17px}
-  .stats>div:nth-child(3){border-left:0}
-  .stats>div:nth-child(n+3){border-top:1px solid var(--line-strong)}
   .grid3,.grid2,.grid4{grid-template-columns:1fr}
   .c90{min-height:0}
   .scrolly .sc-grid,.scrolly .sc-grid-wide{display:flex;flex-direction:column;gap:24px}
