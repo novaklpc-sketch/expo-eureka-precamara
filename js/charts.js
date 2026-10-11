@@ -22,7 +22,7 @@ export function drawE5(host) {
   for (let l = 1; l <= 2.21; l += .2) { svg.append(el('line', { x1: X(l), x2: X(l), y1: P.t, y2: P.b, stroke: W + '.07)' })); txt(svg, X(l), P.b + 20, br(l.toFixed(1)), { f: MONO, s: 12, c: W + '.5)' }); }
   txt(svg, P.r, P.b + 20, 'λ', { f: MONO, s: 12, a: 'end', c: W + '.5)' });
   svg.append(el('line', { x1: P.l, x2: P.r, y1: P.b, y2: P.b, stroke: W + '.3)' }));
-  txt(svg, P.l - 10, P.t + 10, 'CoV IMEP', { f: MONO, s: 12, a: 'end', c: W + '.5)' });
+  txt(svg, P.l - 10, P.t + 10, 'CoV IMEP (%)', { f: MONO, s: 12, a: 'end', c: W + '.5)' });
   svg.append(el('line', { x1: P.l, x2: P.r, y1: Y(5), y2: Y(5), stroke: '#FF5A4F', 'stroke-dasharray': '5 5' }));
   txt(svg, P.l - 10, Y(5) + 4, '5 %', { f: MONO, s: 12, a: 'end', c: '#FF5A4F' });
   const vela = l => 1 + .6 * (l - .9) + 260 * Math.max(0, l - 1.35) ** 2.4;
