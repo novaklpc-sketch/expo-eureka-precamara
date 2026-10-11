@@ -1,6 +1,6 @@
 /* Pré-câmara · atlas-v7 (Expo Eureka) · sistema "Ignição" · tokens
  * Base: atlas-v6/css/tokens.css (Lumina + vermelho do projeto). Mudanças: texto secundário mais claro,
- * vidro com raio 16 px, cores de luz (spark, heat), escala do modo apresentação e tokens dos efeitos.
+ * vidro com raio 16 px, cores de luz (spark, heat) e tokens dos efeitos.
  */
 :root{
   /* ---------- cor ---------- */
@@ -55,11 +55,6 @@
   --d-fast:200ms; --d-base:300ms; --d-reveal:600ms; --stagger:70ms;
   --e-out:cubic-bezier(.16,1,.3,1);
   --e-inout:cubic-bezier(.77,0,.175,1);
-}
-
-/* modo apresentação: um degrau acima, calibrado para MacBook a 50–80 cm */
-:root[data-present]{
-  --fs-h1:56px; --fs-h2:54px; --fs-lead:22px; --fs-lab:15px; --fs-stat:108px;
 }
 
 @media (prefers-reduced-motion:reduce){

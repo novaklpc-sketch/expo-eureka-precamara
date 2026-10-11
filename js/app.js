@@ -1,4 +1,4 @@
-/* atlas-v7 · orquestra a página. Cada tela tem seu bloco; módulos pesados (3D, modo apresentação) entram por import dinâmico. */
+/* atlas-v7 · orquestra a página. Cada tela tem seu bloco; o 3D entra por import dinâmico. */
 import { initLean } from './lean.js';
 import { easeOut, easeInOut } from './util.js';
 
@@ -59,7 +59,6 @@ if (finePointer && !reduced) {
 /* ---------- fundos e gráficos adiados: cada seção carrega o seu quando chega a 900 px da tela ---------- */
 const nearIO = new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-near'); o.unobserve(e.target); } }), { rootMargin: '900px 0px' });
 $$('.sec').forEach(s => nearIO.observe(s));
-document.addEventListener('present:change', e => { if (e.detail.on) $$('.sec').forEach(s => s.classList.add('is-near')); });   // no modo apresentação os atos trocam sem rolagem
 const whenNear = (el, fn, margin = '1000px 0px') => new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { o.disconnect(); fn(); } }, { rootMargin: margin }).observe(el);
 
 /* ---------- T02: gráfico λ real (componente do atlas-v6) ---------- */
@@ -78,8 +77,6 @@ function setStep03(n) {
 const t03IO = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setStep03(+e.target.dataset.step)), { rootMargin: '-45% 0px -45% 0px' });
 t03steps.forEach(s => t03IO.observe(s));
 setStep03(1);
-/* modo apresentação: o controlador avisa o passo (a T02 segue pelo observador do lean.js) */
-t03.addEventListener('present:step', e => setStep03(e.detail.step));
 
 /* ---------- T04: comparador passiva × ativa ---------- */
 const cmp = $('#cmp'), range = $('.cmp-range', cmp);
@@ -193,5 +190,3 @@ document.addEventListener('click', e => { if (!toc.hidden && !toc.contains(e.tar
 /* ---------- gráficos vivos da T08 (tendência E5 e pressão/MFB E6) ---------- */
 whenNear($('#t08'), () => import('./charts.js').then(m => { m.drawE5($('#chart-e5')); m.drawE6($('#chart-e6')); }).catch(err => console.warn('gráficos da T08 indisponíveis, ficam as imagens:', err)));
 
-/* ---------- modo apresentação ---------- */
-import('./present.js').then(m => m.initPresent({ reduced })).catch(err => console.warn('modo apresentação indisponível', err));
