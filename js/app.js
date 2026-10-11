@@ -39,9 +39,9 @@ const navLinks = $$('.nav a'), tabLinks = $$('.tabs [data-tab]');
 const navIO = new IntersectionObserver(es => es.forEach(e => {
   if (!e.isIntersecting) return;
   const sec = e.target, key = sec.dataset.nav || '';
-  navLinks.forEach(a => a.classList.toggle('is-on', a.dataset.nav === key));
+  navLinks.forEach(a => { const on = a.dataset.nav === key; a.classList.toggle('is-on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
   const tab = ['t00', 't01'].includes(sec.id) ? 'resumo' : ['t10', 't11'].includes(sec.id) ? 'autores' : 'capitulos';
-  tabLinks.forEach(t => t.classList.toggle('is-on', t.dataset.tab === tab));
+  tabLinks.forEach(t => { const on = t.dataset.tab === tab; t.classList.toggle('is-on', on); if (on && t.tagName === 'A') t.setAttribute('aria-current', 'true'); else t.removeAttribute('aria-current'); });
 }), { rootMargin: '-45% 0px -50% 0px' });
 $$('.act').forEach(s => navIO.observe(s));
 
@@ -65,18 +65,20 @@ const whenNear = (el, fn, margin = '1000px 0px') => new IntersectionObserver((es
 whenNear($('#t02'), () => initLean($('#t02'), { reduced }));
 
 /* ---------- T03: passos ↔ figura (quadros ilustrativos; o 3D do CAD assume quando carregar) ---------- */
-const t03 = $('#t03'), t03steps = $$('.lstep', t03), frames = $$('.cut-frame', t03), dots = $$('.dots i', t03);
+const t03 = $('#t03'), t03steps = $$('.lstep', t03), frames = $$('.cut-frame', t03), dots = $$('.dots button', t03);
 let cad03 = null, step03 = 0;
 function setStep03(n) {
   if (n === step03) return; step03 = n;
   t03steps.forEach(s => s.classList.toggle('is-on', +s.dataset.step === n));
   frames.forEach(f => f.classList.toggle('is-on', +f.dataset.step === n));
-  dots.forEach((d, i) => d.classList.toggle('is-on', i === n - 1));
+  dots.forEach((d, i) => { const on = i === n - 1; d.classList.toggle('is-on', on); if (on) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
   cad03?.setStep(n);
 }
 const t03IO = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setStep03(+e.target.dataset.step)), { rootMargin: '-45% 0px -45% 0px' });
 t03steps.forEach(s => t03IO.observe(s));
 setStep03(1);
+/* os pontos levam ao passo: rolam o passo até o centro; o observador acende o resto */
+dots.forEach((d, i) => d.addEventListener('click', () => t03steps[i]?.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' })));
 
 /* ---------- T04: comparador passiva × ativa ---------- */
 const cmp = $('#cmp'), range = $('.cmp-range', cmp);
@@ -186,6 +188,7 @@ const toc = $('#toc'), tocBtn = $('[data-tab="capitulos"]');
 tocBtn.addEventListener('click', () => { const open = toc.hidden; toc.hidden = !open; tocBtn.setAttribute('aria-expanded', String(open)); });
 $$('a', toc).forEach(a => a.addEventListener('click', () => { toc.hidden = true; tocBtn.setAttribute('aria-expanded', 'false'); }));
 document.addEventListener('click', e => { if (!toc.hidden && !toc.contains(e.target) && !tocBtn.contains(e.target)) { toc.hidden = true; tocBtn.setAttribute('aria-expanded', 'false'); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !toc.hidden) { toc.hidden = true; tocBtn.setAttribute('aria-expanded', 'false'); tocBtn.focus(); } });
 
 /* ---------- gráficos vivos da T08 (tendência E5 e pressão/MFB E6) ---------- */
 whenNear($('#t08'), () => import('./charts.js').then(m => { m.drawE5($('#chart-e5')); m.drawE6($('#chart-e6')); }).catch(err => console.warn('gráficos da T08 indisponíveis, ficam as imagens:', err)));

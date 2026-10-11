@@ -182,8 +182,9 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .note-tip{position:absolute;right:34px;top:32px;z-index:3;font-size:14px;color:rgba(255,255,255,.8);padding-left:26px;border-left:1px solid rgba(255,255,255,.6)}
 .cut .cap{margin-top:12px}
 .dots{display:flex;justify-content:center;gap:10px;margin:18px 0}
-.dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);transition:background-color var(--d-base),transform var(--d-base)}
-.dots i.is-on{background:var(--red);transform:scale(1.25)}
+.dots button{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;background:transparent;cursor:pointer;border-radius:50%}
+.dots button::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);transition:background-color var(--d-base),transform var(--d-base)}
+.dots button.is-on::before{background:var(--red);transform:scale(1.25)}
 .synth{position:relative;padding:18px 24px}
 .synth::before{content:"";position:absolute;left:-1px;top:14px;bottom:14px;width:2px;background:var(--red)}
 .synth .just{margin-top:6px;color:var(--text-1);font-size:15.5px}
