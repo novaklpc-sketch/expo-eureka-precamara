@@ -1,6 +1,6 @@
 /* Gráfico interativo do limite de operação pobre (capítulo 01 da versão 3).
  * Curvas da monografia (scripts/gera_curvas.py, "Fonte: Os autores, 2026", elaboradas com base em
- * Alvarez et al. (2018) e Heywood (2018)): rendimento térmico, NOx relativo e CoV de IMEP em função de λ.
+ * Alvarez et al. (2018) e Heywood (2018)): rendimento térmico, NOx relativo e CoV da IMEP em função de λ.
  * Três painéis empilhados, um por grandeza, com um só eixo λ e um cursor comum, movido pela rolagem
  * ou pelo ponteiro. Nenhum valor é medido neste trabalho: o comportamento é qualitativo.
  */
@@ -20,12 +20,12 @@ export const el=(n,a={},t)=>{const e=document.createElementNS(SVGNS,n);for(const
 
 export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  const svg=el('svg',{class:'lean-svg',role:'img','aria-labelledby':'lean-svg-title'});
- svg.append(el('title',{id:'lean-svg-title'},'Rendimento térmico, NOx relativo e CoV de IMEP em função do fator lambda, com o limite de operação pobre'));
+ svg.append(el('title',{id:'lean-svg-title'},'Rendimento térmico, NOx relativo e CoV da IMEP em função do fator lambda, com o limite de operação pobre'));
  host.append(svg);
  const panels=[
   {key:'eta',name:'Rendimento térmico',unit:'%',min:30,max:48,ticks:[32,40,48],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
   {key:'nox',name:'NOx relativo',unit:'%',min:0,max:105,ticks:[0,50,100],fmt:v=>Math.round(v)+' %'},
-  {key:'cov',name:'CoV de IMEP',unit:'%',min:0,max:30,ticks:[0,5,15,30],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
+  {key:'cov',name:'CoV da IMEP',unit:'%',min:0,max:30,ticks:[0,5,15,30],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
  ];
  let W=0,H=0,plot=null,lambda=1.0,pointerLambda=null,layers={};
  const small=()=>W<560;
@@ -98,7 +98,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','Gráfico interativo do limite pobre. Use as setas para mover o fator lambda.');
  const live=document.createElement('p');live.className='sr-only';live.setAttribute('role','status');host.after(live);
  let liveT=0;
- const announce=()=>{clearTimeout(liveT);liveT=setTimeout(()=>{const l=pointerLambda??lambda;live.textContent=`λ ${l.toFixed(2).replace('.',',')}: rendimento ${curves.eta(l).toFixed(1).replace('.',',')} %, NOx relativo ${Math.round(curves.nox(l))} %, CoV de IMEP ${curves.cov(l).toFixed(1).replace('.',',')} %${l>=LIMIT?', região instável':''}.`},300)};
+ const announce=()=>{clearTimeout(liveT);liveT=setTimeout(()=>{const l=pointerLambda??lambda;live.textContent=`λ ${l.toFixed(2).replace('.',',')}: rendimento ${curves.eta(l).toFixed(1).replace('.',',')} %, NOx relativo ${Math.round(curves.nox(l))} %, CoV da IMEP ${curves.cov(l).toFixed(1).replace('.',',')} %${l>=LIMIT?', região instável':''}.`},300)};
  host.addEventListener('keydown',e=>{
   const step=e.shiftKey?.1:.01;let l=pointerLambda??lambda;
   if(e.key==='ArrowRight'||e.key==='ArrowUp')l+=step;else if(e.key==='ArrowLeft'||e.key==='ArrowDown')l-=step;
@@ -129,5 +129,5 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
 /* Tabela acessível com valores amostrados das mesmas curvas */
 export function leanTable(){
  const rows=[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7].map(l=>`<tr><th scope="row">${l.toFixed(1).replace('.',',')}</th><td>${curves.eta(l).toFixed(1).replace('.',',')}</td><td>${Math.round(curves.nox(l))}</td><td>${curves.cov(l).toFixed(1).replace('.',',')}</td></tr>`).join('');
- return `<table><caption>Valores das curvas (comportamento qualitativo)</caption><thead><tr><th scope="col">λ</th><th scope="col">Rendimento (%)</th><th scope="col">NOx relativo (%)</th><th scope="col">CoV de IMEP (%)</th></tr></thead><tbody>${rows}</tbody></table>`;
+ return `<table><caption>Valores das curvas (comportamento qualitativo)</caption><thead><tr><th scope="col">λ</th><th scope="col">Rendimento (%)</th><th scope="col">NOx relativo (%)</th><th scope="col">CoV da IMEP (%)</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
