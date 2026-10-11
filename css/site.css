@@ -133,10 +133,10 @@ html:not(.no-js) #t06:not(.is-near) .t06-stage{background-image:none!important}
 .stats small{display:block;margin-top:6px;font:400 12px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--text-3)}
 
 /* ---------- T01 ---------- */
-.c90{display:flex;flex-direction:column;min-height:400px}
+.c90{display:flex;flex-direction:column}
 .kicker{display:flex;align-items:center;gap:12px;font:400 13px/1 var(--f-mono);letter-spacing:.14em;color:var(--text-2)}
 .kicker i{width:9px;height:9px;border-radius:50%;background:var(--red)}
-.c90 .just{margin-top:26px;font-size:16px;color:var(--text-1);opacity:.9}
+.c90 .just{margin-top:26px;margin-bottom:28px;font-size:16px;color:var(--text-1);opacity:.9}
 .totem{margin-top:auto;padding-top:20px;border-top:1px solid var(--line-strong)}
 .totem b{display:block;font-size:clamp(40px,2.6vw + 12px,56px);line-height:1.1;letter-spacing:-.02em}
 .totem span{display:block;margin-top:6px;font:400 13px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--text-2)}
