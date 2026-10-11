@@ -125,7 +125,7 @@ html:not(.no-js) #t06:not(.is-near) .t06-stage{background-image:none!important}
 .sc-text .lsteps{margin-top:36px;padding-bottom:30vh}
 .lsteps{display:grid;gap:14px}
 .lstep{position:relative;overflow:hidden;padding:20px 26px;border-radius:var(--r);background:rgba(10,10,10,.55);border:1px solid var(--line-strong);transition:border-color var(--d-base) var(--e-std),background-color var(--d-base) var(--e-std);min-height:84px}
-.scrolly .lstep{margin-bottom:22vh}
+.scrolly .lstep{margin-bottom:12vh}
 .lstep::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad-red);transform:scaleY(0);transform-origin:50% 0;transition:transform var(--d-base) var(--e-out)}
 .lstep-h{font:500 19px/1.35 var(--f-sans);color:var(--text-2);display:flex;gap:18px;align-items:baseline}
 .lstep-l{font:400 13px/1 var(--f-mono);letter-spacing:.04em;color:var(--text-3);min-width:72px;font-variant-numeric:tabular-nums}
@@ -164,6 +164,7 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .lean-svg.is-text .lean-cursor-line{stroke:var(--red)}
 .lean-dot{fill:#fff}
 .lean-value{font:500 12px var(--f-mono);fill:#fff}
+.lean-value,text.lean-note{paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
 .lean-lambda{font:600 14px var(--f-mono);fill:#fff}
 .lean-ring{fill:none;stroke:var(--red-text);stroke-width:1.5;opacity:0;transform-box:fill-box;transform-origin:center}
 .lean-cursor.is-arrive .lean-ring{animation:lean-ring 350ms var(--e-out) both}

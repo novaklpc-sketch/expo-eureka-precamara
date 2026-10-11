@@ -57,9 +57,9 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   // limiar do CoV (5 %) e rótulos do limite
   const cov=panels[2];
   g.append(el('line',{class:'lean-threshold',x1:plot.left,x2:W-plot.right,y1:cov.y(5),y2:cov.y(5)}));
-  g.append(el('text',{class:'lean-note',x:plot.left+6,y:cov.y(5)-6},'corte do CoV · 5 %'));
+  if(!small())g.append(el('text',{class:'lean-note',x:plot.left+6,y:cov.y(5)-6},'corte do CoV · 5 %'));
   g.append(el('line',{class:'lean-limit',x1:xl,x2:xl,y1:plot.top-6,y2:H-plot.bottom+4}));
-  g.append(el('text',{class:'lean-note',x:xl-6,y:H-plot.bottom-4,'text-anchor':'end'},small()?'limite':'limite de operação pobre'));
+  g.append(el('text',{class:'lean-note',x:xl-6,y:H-plot.bottom-4,'text-anchor':'end'},small()?'limite pobre':'limite de operação pobre'));
   g.append(el('text',{class:'lean-note lean-note-red',x:(xl+plot.x(L1))/2,y:cov.y(cov.min)-6,'text-anchor':'middle'},small()?'instável':'instável (misfire)'));
   // extensão pretendida com a pré-câmara (painel do rendimento)
   const eta=panels[0],ya=eta.y(45.5);
@@ -86,7 +86,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
    const v=curves[p.key](l),y=p.y(v);
    layers.dots[i].setAttribute('cx',x);layers.dots[i].setAttribute('cy',y);layers.rings[i].setAttribute('cx',x);layers.rings[i].setAttribute('cy',y);
    const t=layers.labels[i],flip=x>W-plot.right-90;
-   t.setAttribute('x',flip?x-10:x+10);t.setAttribute('y',y-8);t.setAttribute('text-anchor',flip?'end':'start');t.textContent=p.fmt(v);
+   t.setAttribute('x',flip?x-10:x+10);t.setAttribute('y',y-11);t.setAttribute('text-anchor',flip?'end':'start');t.textContent=p.fmt(v);
   });
   layers.lam.setAttribute('x',x);layers.lam.setAttribute('y',plot.top-26);layers.lam.textContent='λ = '+l.toFixed(2).replace('.',',');
   svg.classList.toggle('is-unstable',l>=LIMIT);
