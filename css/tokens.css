@@ -1,6 +1,6 @@
 /* Pré-câmara · atlas-v7 (Expo Eureka) · sistema "Ignição" · tokens
  * Base: atlas-v6/css/tokens.css (Lumina + vermelho do projeto). Mudanças: texto secundário mais claro,
- * vidro com raio 16 px, cores de luz (spark, heat) e tokens dos efeitos.
+ * vidro com raio 16 px e tokens dos efeitos.
  */
 :root{
   /* ---------- cor ---------- */
@@ -18,11 +18,8 @@
   --red:#df2531;
   --red-2:#ff5a4f;
   --red-text:#ff5a4f;
-  --heat:#ff7a2f;                   /* só dentro dos rastros de luz */
-  --spark:#fff4ec;                  /* núcleo do feixe */
   --ok:#3ddc84;
   --grad-red:linear-gradient(180deg,var(--red-2),var(--red));
-  --grad-jet:linear-gradient(90deg,var(--spark) 0%,var(--red-2) 18%,var(--red) 55%,rgba(255,122,47,0) 100%);
   --haze:radial-gradient(60% 40% at 50% 100%,rgba(223,37,49,.35),rgba(223,37,49,0) 70%);
   --glow:0 0 25px rgba(223,37,49,.35),0 8px 40px rgba(223,37,49,.18);
 

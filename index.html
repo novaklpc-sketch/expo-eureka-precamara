@@ -6,6 +6,7 @@
 <title>Pré-câmara de combustão ativa · TCC Engenharia Mecânica · Instituto Mauá</title>
 <meta name="description" content="Estudo da pré-câmara de combustão ativa em um motor monocilíndrico. TCC de Engenharia Mecânica do Instituto Mauá de Tecnologia, 2º lugar no Trabalho Estudantil SAE BRASIL – Educação de Engenharia 2026.">
 <meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- fonte do Google sem bloquear a primeira pintura: carrega como preload e vira folha de estilo ao chegar; a reserva local (Inter) desenha antes -->
@@ -35,7 +36,7 @@
 <!-- ═════════════ T00 · Entrada ═════════════ -->
 <section class="act hero" id="t00" data-act="1" aria-label="Entrada">
   <div class="hero-bg" aria-hidden="true">
-    <img src="assets/bg/t00-peca-1920.webp" srcset="assets/bg/t00-peca-1920.webp 1920w, assets/bg/t00-peca.webp 3840w" sizes="100vw" alt="" fetchpriority="high">
+    <img width="1920" height="1080" src="assets/bg/t00-peca-1920.webp" srcset="assets/bg/t00-peca-1920.webp 1920w, assets/bg/t00-peca.webp 3840w" sizes="100vw" alt="" fetchpriority="high">
   </div>
   <div class="hero-in wrap">
     <div class="hero-copy">
@@ -62,7 +63,7 @@
     <div class="grid3">
       <article class="card c90 glass rv">
         <p class="kicker"><i></i>01 · O PROBLEMA</p>
-        <p class="just">Misturas pobres rendem mais e formam menos NO<sub>x</sub>. Mas, por volta de λ = 1,50, a vela convencional já não as inflama de forma estável.</p>
+        <p class="just">Misturas pobres rendem mais e formam menos NO<sub>x</sub>. Mas, por volta de λ = 1,50, a vela convencional já não as inflama de forma estável.</p>
         <div class="totem"><b class="num">λ 1,50</b><span>Limite da vela</span><small>Heywood (2018); Zhu et al. (2022)</small></div>
       </article>
       <article class="card c90 glass rv">
@@ -73,7 +74,7 @@
       <article class="card c90 glass rv">
         <p class="kicker"><i></i>03 · O QUE FIZEMOS</p>
         <p class="just">Projetamos uma pré-câmara ativa para a sede da vela de um Honda GX160, convertemos o motor para gestão eletrônica e preparamos a bancada, a etanol.</p>
-        <div class="totem"><b class="num">67,70 mm</b><span>A nossa peça</span><small>Os autores (2026)</small></div>
+        <div class="totem"><b class="num">67,70 mm</b><span>A nossa peça</span><small>Os autores (2026)</small></div>
       </article>
     </div>
     <div class="ctas rv">
@@ -94,20 +95,20 @@
         <p class="lead just rv">Operar com excesso de ar eleva o rendimento térmico e reduz a formação de óxidos de nitrogênio, mas a combustão se torna instável à medida que a mistura empobrece (Alvarez et al., 2018; Heywood, 2018).</p>
         <ol class="lsteps" aria-label="Quatro passos do limite pobre">
           <li class="lstep" data-lambda="1.00" data-step="1">
-            <p class="lstep-h"><span class="lstep-l">λ = 1,00</span> Mistura estequiométrica.</p>
+            <p class="lstep-h"><span class="lstep-l">λ = 1,00</span> Mistura estequiométrica.</p>
             <div class="lstep-body"><p class="just">Com a quantidade de ar exata para queimar o combustível, o fator lambda vale 1. É a condição de referência do motor: a temperatura de chama é alta e as emissões de óxidos de nitrogênio ficam próximas do máximo.</p><p class="src">Heywood (2018)</p></div>
           </li>
           <li class="lstep" data-lambda="1.25" data-step="2">
-            <p class="lstep-h"><span class="lstep-l">λ ≈ 1,25</span> Mais ar, mais rendimento.</p>
+            <p class="lstep-h"><span class="lstep-l">λ ≈ 1,25</span> Mais ar, mais rendimento.</p>
             <div class="lstep-body"><p class="just">O excesso de ar eleva a razão entre os calores específicos da carga, reduz as perdas de calor para as paredes e diminui as perdas por bombeamento em carga parcial. O rendimento térmico sobe e a formação de NO<sub>x</sub> cai.</p><p class="src">Alvarez et al. (2018); Heywood (2018)</p></div>
           </li>
           <li class="lstep" data-lambda="1.50" data-step="3">
-            <p class="lstep-h"><span class="lstep-l">λ ≈ 1,50</span> O limite da vela convencional.</p>
-            <div class="lstep-body"><p class="just">A chama se propaga mais devagar e a combustão passa a variar de um ciclo para outro. Quando o coeficiente de variação da pressão média efetiva indicada ultrapassa 5 %, surgem falhas de combustão e a operação deixa de ser estável.</p><p class="short">A combustão passa a variar de um ciclo para outro; acima de 5 % de CoV de IMEP, surgem falhas.</p><p class="src">Heywood (2018); Zhu et al. (2022)</p></div>
+            <p class="lstep-h"><span class="lstep-l">λ ≈ 1,50</span> O limite da vela convencional.</p>
+            <div class="lstep-body"><p class="just">A chama se propaga mais devagar e a combustão passa a variar de um ciclo para outro. Quando o coeficiente de variação da pressão média efetiva indicada ultrapassa 5 %, surgem falhas de combustão e a operação deixa de ser estável.</p><p class="short">A combustão passa a variar de um ciclo para outro; acima de 5 % de CoV de IMEP, surgem falhas.</p><p class="src">Heywood (2018); Zhu et al. (2022)</p></div>
           </li>
           <li class="lstep" data-lambda="1.70" data-step="4">
             <p class="lstep-h"><span class="lstep-l">λ → 1,70</span> Estender o limite.</p>
-            <div class="lstep-body"><p class="just">É o papel da pré-câmara: deslocar o limite de operação estável para misturas mais pobres. Com pré-câmara ativa alimentada por gasolina vaporizada, o limite chegou a λ = 2,12 pelo critério de 5 %.</p><p class="src">Zhu et al. (2022)</p></div>
+            <div class="lstep-body"><p class="just">É o papel da pré-câmara: deslocar o limite de operação estável para misturas mais pobres. Com pré-câmara ativa alimentada por gasolina vaporizada, o limite chegou a λ = 2,12 pelo critério de 5 %.</p><p class="src">Zhu et al. (2022)</p></div>
           </li>
         </ol>
       </div>
@@ -153,12 +154,12 @@
         <figure class="cut glass" id="cut-fig">
           <span class="ticks" aria-hidden="true"></span>
           <div class="cut-stage" id="cad-t03" data-step="1">
-            <img class="cut-frame is-on" data-step="1" src="assets/fig/corte-1.webp" alt="Corte ilustrativo da pré-câmara: volume, orifícios, tomada da vela e passagem do injetor.">
-            <img class="cut-frame" data-step="2" src="assets/fig/corte-2.webp" alt="Corte ilustrativo: a carga entra na pré-câmara pelos orifícios e o injetor auxiliar a enriquece." loading="lazy">
-            <img class="cut-frame" data-step="3" src="assets/fig/corte-3.webp" alt="Corte ilustrativo: a centelha inicia a combustão dentro da pré-câmara." loading="lazy">
-            <img class="cut-frame" data-step="4" src="assets/fig/corte-4.webp" alt="Corte ilustrativo: cinco jatos de gás quente saem pelos orifícios." loading="lazy">
+            <img width="1659" height="948" class="cut-frame is-on" data-step="1" src="assets/fig/corte-1.webp" alt="Corte ilustrativo da pré-câmara: volume, orifícios, tomada da vela e passagem do injetor.">
+            <img width="1659" height="948" class="cut-frame" data-step="2" src="assets/fig/corte-2.webp" alt="Corte ilustrativo: a carga entra na pré-câmara pelos orifícios e o injetor auxiliar a enriquece." loading="lazy">
+            <img width="1659" height="948" class="cut-frame" data-step="3" src="assets/fig/corte-3.webp" alt="Corte ilustrativo: a centelha inicia a combustão dentro da pré-câmara." loading="lazy">
+            <img width="1659" height="948" class="cut-frame" data-step="4" src="assets/fig/corte-4.webp" alt="Corte ilustrativo: cinco jatos de gás quente saem pelos orifícios." loading="lazy">
           </div>
-          <p class="mono note-tip">5 orifícios ⌀1,0 mm · 20°</p>
+          <p class="mono note-tip">5 orifícios ⌀1,0 mm · 20°</p>
           <figcaption class="cap">Imagem ilustrativa: a luz representa a carga, a injeção, a centelha e os jatos; não é medição.</figcaption>
         </figure>
         <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -181,8 +182,8 @@
     <figure class="cmp glass rv" id="cmp" style="--pos:50%">
       <span class="ticks" aria-hidden="true"></span>
       <div class="cmp-stage">
-        <img class="cmp-a" src="assets/fig/passiva.webp" alt="Pré-câmara passiva: vela com capa e orifícios, sem injetor." loading="lazy">
-        <div class="cmp-b"><img src="assets/fig/ativa.webp" alt="Pré-câmara ativa: corpo em Y com vela na tomada lateral e injetor no eixo." loading="lazy"></div>
+        <img width="1672" height="941" class="cmp-a" src="assets/fig/passiva.webp" alt="Pré-câmara passiva: vela com capa e orifícios, sem injetor." loading="lazy">
+        <div class="cmp-b"><img width="1672" height="941" src="assets/fig/ativa.webp" alt="Pré-câmara ativa: corpo em Y com vela na tomada lateral e injetor no eixo." loading="lazy"></div>
         <span class="mono cmp-tag cmp-tag-a">PASSIVA</span><span class="mono cmp-tag cmp-tag-b">ATIVA</span>
         <span class="cmp-line" aria-hidden="true"></span>
         <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="Divisória entre passiva e ativa">
@@ -214,7 +215,7 @@
 <!-- ═════════════ T05 · Da pista à rua ═════════════ -->
 <section class="act sec t05" id="t05" data-act="6" data-nav="t03" aria-labelledby="t05-h">
   <div class="t05-bg" aria-hidden="true">
-    <img class="t05-plate" src="assets/bg/t05.webp" alt="" loading="lazy">
+    <img width="1672" height="941" class="t05-plate" src="assets/bg/t05.webp" alt="" loading="lazy">
     <span class="t05-glow"></span>
   </div>
   <div class="wrap">
@@ -227,8 +228,8 @@
     </div>
     <ol class="timeline" aria-label="Da pista à rua">
       <li class="tl glass rv"><b class="num mono">2014–15</b><p><span class="mono k">ORIGEM</span> <strong>Criada para a competição.</strong></p><p class="just">A versão passiva do MAHLE Jet Ignition teve seu primeiro programa e sua primeira vitória no automobilismo.</p><p class="src">Bunce (2022); Bassett et al. (2026)</p></li>
-      <li class="tl glass rv"><b class="num mono">+2 p.p.</b><p><span class="mono k">MOTORES DE SÉRIE</span> <strong>Da pista à rua.</strong></p><p class="just">Velas com pré-câmara passiva elevaram o rendimento efetivo em até dois pontos percentuais.</p><p class="src">Blankmeister et al. (2026); Korkmaz et al. (2026)</p></li>
-      <li class="tl glass is-chosen rv"><b class="num mono red">1,9 → 1,0 %</b><p><span class="mono k">ALTO DESEMPENHO</span> <strong>No hipercarro híbrido.</strong></p><p class="just">Num V12 híbrido de produção limitada, as pré-câmaras reduziram a variação entre ciclos de 1,9 % para 1,0 %.</p><p class="src">Bassett et al. (2026)</p></li>
+      <li class="tl glass rv"><b class="num mono">+2 p.p.</b><p><span class="mono k">MOTORES DE SÉRIE</span> <strong>Da pista à rua.</strong></p><p class="just">Velas com pré-câmara passiva elevaram o rendimento efetivo em até dois pontos percentuais.</p><p class="src">Blankmeister et al. (2026); Korkmaz et al. (2026)</p></li>
+      <li class="tl glass is-chosen rv"><b class="num mono red">1,9 → 1,0 %</b><p><span class="mono k">ALTO DESEMPENHO</span> <strong>No hipercarro híbrido.</strong></p><p class="just">Num V12 híbrido de produção limitada, as pré-câmaras reduziram a variação entre ciclos de 1,9 % para 1,0 %.</p><p class="src">Bassett et al. (2026)</p></li>
     </ol>
     <p class="cap cap-left">Imagem ilustrativa do carro.</p>
   </div>
@@ -242,7 +243,7 @@
       <div class="t06-stage">
         <span class="ticks" aria-hidden="true"></span>
         <div class="cad" id="cad-t06" role="group" aria-label="Modelo 3D da pré-câmara, a partir do CAD dos autores">
-          <img class="cad-fallback" src="assets/img/peca-a2-1920.webp" alt="A pré-câmara usinada em aço inoxidável AISI 304." loading="lazy">
+          <img width="1920" height="1080" class="cad-fallback" src="assets/img/peca-a2-1920.webp" alt="A pré-câmara usinada em aço inoxidável AISI 304." loading="lazy">
         </div>
         <p class="cap stage-cap">Modelo 3D a partir do CAD dos autores. Arraste para girar.</p>
         <div class="seg" role="group" aria-label="Controles do 3D">
@@ -256,15 +257,15 @@
         <h2 class="h2 rv" id="t06-h">Projetada para a sede da vela</h2>
         <p class="lead just rv">Projetada pelos autores e modelada em CAD até a revisão V4 do desenho de fabricação: um corpo de revolução usinado em aço inoxidável AISI 304.</p>
         <dl class="specs glass rv">
-          <div><dt>CORPO</dt><dd>67,70 mm · AISI 304</dd></div>
-          <div><dt>ROSCA</dt><dd>M14 × 1,25</dd></div>
-          <div><dt>TOMADA DA VELA</dt><dd>M10 × 1,0 a 16°</dd></div>
-          <div><dt>ORIFÍCIOS</dt><dd>5 × ⌀1,0 mm a 20°</dd></div>
-          <div><dt>VOLUME</dt><dd>2,04 cm³</dd></div>
+          <div><dt>CORPO</dt><dd>67,70 mm · AISI 304</dd></div>
+          <div><dt>ROSCA</dt><dd>M14 × 1,25</dd></div>
+          <div><dt>TOMADA DA VELA</dt><dd>M10 × 1,0 a 16°</dd></div>
+          <div><dt>ORIFÍCIOS</dt><dd>5 × ⌀1,0 mm a 20°</dd></div>
+          <div><dt>VOLUME</dt><dd>2,04 cm³</dd></div>
           <div><dt>CONJUNTO</dt><dd>Injetor Marelli DI · vela NGK C6HSA</dd></div>
         </dl>
         <button class="photo-card glass rv" type="button" data-lightbox="assets/img/peca-a2.webp" data-alt="A pré-câmara usinada, em estúdio.">
-          <img src="assets/img/peca-a2-1920.webp" alt="" loading="lazy">
+          <img width="1920" height="1080" src="assets/img/peca-a2-1920.webp" alt="" loading="lazy">
           <span><span class="mono red">A PEÇA USINADA</span><span>Ver de perto.</span></span>
         </button>
       </div>
@@ -281,12 +282,12 @@
     <p class="lead just narrow rv">Antes da fabricação em metal, validamos o projeto por prototipagem rápida. Usinamos o cabeçote para alojar a pré-câmara e o injetor, e convertemos o motor de carburador e magneto para gestão eletrônica de injeção e ignição.</p>
     <div class="progress-bar rv" role="img" aria-label="5 de 6 fases concluídas"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><span class="mono">5 DE 6 CONCLUÍDAS</span></div>
     <ol class="phases">
-      <li><button class="phase rv" type="button" data-lightbox="assets/img/c1-foto.webp" data-alt="Protótipo impresso em 3D, montado no cabeçote."><span class="ph-top mono">FASE 01 <em>✓ CONCLUÍDA</em></span><img src="assets/img/c1-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">01</b>Protótipo impresso em 3D</span></button></li>
-      <li><button class="phase rv" type="button" data-lightbox="assets/img/c2-foto.webp" data-alt="Modelo seccionado do protótipo."><span class="ph-top mono">FASE 02 <em>✓ CONCLUÍDA</em></span><img src="assets/img/c2-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">02</b>Modelo seccionado</span></button></li>
-      <li><button class="phase rv" type="button" data-lightbox="assets/img/c3-foto.webp" data-alt="Fresamento do cabeçote."><span class="ph-top mono">FASE 03 <em>✓ CONCLUÍDA</em></span><img src="assets/img/c3-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">03</b>Fresamento do cabeçote</span></button></li>
-      <li><button class="phase rv" type="button" data-lightbox="assets/img/c4-foto.webp" data-alt="Verificação após a usinagem."><span class="ph-top mono">FASE 04 <em>✓ CONCLUÍDA</em></span><img src="assets/img/c4-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">04</b>Verificação após a usinagem</span></button></li>
-      <li><button class="phase rv" type="button" data-lightbox="assets/img/c5-foto.webp" data-alt="Protótipo usinado em AISI 304, com o injetor."><span class="ph-top mono">FASE 05 <em>✓ CONCLUÍDA</em></span><img src="assets/img/c5-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">05</b>Protótipo usinado em AISI 304</span></button></li>
-      <li><button class="phase is-now rv" type="button" data-lightbox="assets/img/c7-foto.webp" data-alt="Gestão eletrônica FuelTech FT550."><span class="ph-top mono">FASE 06 <em>◌ EM ANDAMENTO</em></span><img src="assets/img/c7-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">06</b>Gestão eletrônica</span></button></li>
+      <li><button class="phase rv" type="button" data-lightbox="assets/img/c1-foto.webp" data-alt="Protótipo impresso em 3D, montado no cabeçote."><span class="ph-top mono">FASE 01 <em>✓ CONCLUÍDA</em></span><img width="1086" height="1448" src="assets/img/c1-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">01</b>Protótipo impresso em 3D</span></button></li>
+      <li><button class="phase rv" type="button" data-lightbox="assets/img/c2-foto.webp" data-alt="Modelo seccionado do protótipo."><span class="ph-top mono">FASE 02 <em>✓ CONCLUÍDA</em></span><img width="1086" height="1448" src="assets/img/c2-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">02</b>Modelo seccionado</span></button></li>
+      <li><button class="phase rv" type="button" data-lightbox="assets/img/c3-foto.webp" data-alt="Fresamento do cabeçote."><span class="ph-top mono">FASE 03 <em>✓ CONCLUÍDA</em></span><img width="1086" height="1448" src="assets/img/c3-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">03</b>Fresamento do cabeçote</span></button></li>
+      <li><button class="phase rv" type="button" data-lightbox="assets/img/c4-foto.webp" data-alt="Verificação após a usinagem."><span class="ph-top mono">FASE 04 <em>✓ CONCLUÍDA</em></span><img width="1086" height="1448" src="assets/img/c4-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">04</b>Verificação após a usinagem</span></button></li>
+      <li><button class="phase rv" type="button" data-lightbox="assets/img/c5-foto.webp" data-alt="Protótipo usinado em AISI 304, com o injetor."><span class="ph-top mono">FASE 05 <em>✓ CONCLUÍDA</em></span><img width="1086" height="1448" src="assets/img/c5-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">05</b>Protótipo usinado em AISI 304</span></button></li>
+      <li><button class="phase is-now rv" type="button" data-lightbox="assets/img/c7-foto.webp" data-alt="Gestão eletrônica FuelTech FT550."><span class="ph-top mono">FASE 06 <em>◌ EM ANDAMENTO</em></span><img width="1086" height="1448" src="assets/img/c7-cel.webp" alt="" loading="lazy"><span class="ph-cap"><b class="mono">06</b>Gestão eletrônica</span></button></li>
     </ol>
     <p class="cap cap-left">Imagens ilustrativas a partir de fotos dos autores. Abra uma fase para ver a foto original. Fonte: os autores, 2026.</p>
   </div>
@@ -305,14 +306,14 @@
       <span class="chip chip-live rv">CAMPANHA EM ANDAMENTO</span>
     </div>
     <div class="grid4">
-      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Limite de operação pobre</h3><p>Maior λ com combustão estável em cada configuração, pelo critério de 5 % no CoV da IMEP (coeficiente de variação da pressão média efetiva indicada).</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
+      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Limite de operação pobre</h3><p>Maior λ com combustão estável em cada configuração, pelo critério de 5 % no CoV da IMEP (coeficiente de variação da pressão média efetiva indicada).</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
       <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Variabilidade cíclica</h3><p>CoV da IMEP ao longo da varredura de λ, sobre algumas centenas de ciclos consecutivos.</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
       <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Rendimento térmico indicado</h3><p>Trabalho indicado por ciclo dividido pela energia do combustível admitido nas duas câmaras.</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
-      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Fase e duração da combustão</h3><p>Durações de 0 a 10 % e de 10 a 90 % da massa queimada e CA50 (ângulo de 50 % da massa queimada), a partir da taxa de liberação de calor.</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
+      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Fase e duração da combustão</h3><p>Durações de 0 a 10 % e de 10 a 90 % da massa queimada e CA50 (ângulo de 50 % da massa queimada), a partir da taxa de liberação de calor.</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
     </div>
     <div class="charts">
-      <figure class="chartbox dashed rv"><div id="chart-e5" class="chart-host chart-e5"><img src="assets/fig/e5.webp" alt="Tendência esperada pela literatura: CoV da IMEP em função de λ; a vela cruza 5 % perto de λ 1,5 e a pré-câmara ativa em λ 1,94 (combustível líquido) ou 2,12 (vaporizado), segundo Zhu et al. (2022)." loading="lazy"></div></figure>
-      <figure class="chartbox dashed rv"><div id="chart-e6" class="chart-host chart-e6"><img src="assets/fig/e6.webp" alt="Pressão no cilindro e fração mássica queimada em função do ângulo do virabrequim: centelha em −25°, MFB 10 % em −2,6°, 50 % em +8,3° e 90 % em +19,8°." loading="lazy"></div><figcaption class="cap">O que a bancada vai registrar em cada ciclo: pressão no cilindro e fases da queima. Curvas ilustrativas da monografia (Figura 1), com base em Heywood (2018).</figcaption></figure>
+      <figure class="chartbox dashed rv"><div id="chart-e5" class="chart-host chart-e5"><img width="3000" height="392" src="assets/fig/e5.webp" alt="Tendência esperada pela literatura: CoV da IMEP em função de λ; a vela cruza 5 % perto de λ 1,5 e a pré-câmara ativa em λ 1,94 (combustível líquido) ou 2,12 (vaporizado), segundo Zhu et al. (2022)." loading="lazy"></div></figure>
+      <figure class="chartbox dashed rv"><div id="chart-e6" class="chart-host chart-e6"><img width="2400" height="1520" src="assets/fig/e6.webp" alt="Pressão no cilindro e fração mássica queimada em função do ângulo do virabrequim: centelha em −25°, MFB 10 % em −2,6°, 50 % em +8,3° e 90 % em +19,8°." loading="lazy"></div><figcaption class="cap">O que a bancada vai registrar em cada ciclo: pressão no cilindro e fases da queima. Curvas ilustrativas da monografia (Figura 1), com base em Heywood (2018).</figcaption></figure>
     </div>
   </div>
 </section>
