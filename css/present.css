@@ -51,13 +51,6 @@ html[data-present]{overflow:hidden;scroll-behavior:auto;scroll-padding-top:0;tou
 [data-present] .act.is-entering .rv.is-in{animation:p-rise calc(var(--d-reveal,600ms) * .6) var(--e-out,cubic-bezier(.16,1,.3,1)) both;animation-delay:calc(var(--i,0) * var(--stagger,70ms) * .6 + 120ms)}
 @keyframes p-rise{from{opacity:0}to{opacity:1}}
 
-/* ---------- tela de espera: o impacto do feixe pulsa a cada 8 s ---------- */
-[data-present] #t00.is-lit.is-attract .impact{animation:impact 1.2s var(--e-out,cubic-bezier(.16,1,.3,1)) .8s both,p-attract 8s var(--e-out,cubic-bezier(.16,1,.3,1)) infinite}
-@keyframes p-attract{
-  0%{scale:1;filter:none}
-  6%{scale:1.35;filter:brightness(1.7)}
-  16%,100%{scale:1;filter:none}
-}
 
 /* ---------- índice dos atos (toque duplo) ---------- */
 .present-index{width:min(92vw,1080px);max-height:88vh;padding:36px 40px 40px;border:1px solid var(--glass-border,rgba(255,255,255,.1));border-radius:var(--r,16px);background:rgba(10,10,10,.86);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:var(--text-2,#c4c4c4);overflow:auto}
@@ -81,7 +74,6 @@ html[data-present]{overflow:hidden;scroll-behavior:auto;scroll-padding-top:0;tou
   [data-present] .scrolly .lstep.is-pstep .lstep-body,
   [data-present] .act.is-entering .rv.is-in,
   .present-index[open]{animation:none}
-  [data-present] #t00.is-lit.is-attract .impact{animation:none;opacity:1}
   [data-present] .progress span{transition:none}
   .present-edges span,.present-warn{animation:none}
 }

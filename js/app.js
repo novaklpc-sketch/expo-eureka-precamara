@@ -45,23 +45,10 @@ const navIO = new IntersectionObserver(es => es.forEach(e => {
 }), { rootMargin: '-45% 0px -50% 0px' });
 $$('.act').forEach(s => navIO.observe(s));
 
-/* ---------- T00: feixe, impacto e jatos sobre a foto real ---------- */
+/* ---------- T00: a foto está pronta; marca a entrada como acesa ---------- */
 const hero = $('#t00'), heroImg = $('.hero-bg img');
-/* pontos na foto 02 (3840 × 2160): corpo da peça e ponta com os orifícios, em fração da imagem */
-const BODY = [0.485, 0.505], TIP = [0.718, 0.60];
-function placeHero() {
-  const W = hero.clientWidth, H = hero.clientHeight, iw = 3840, ih = 2160;
-  const s = Math.max(W / iw, H / ih), dw = iw * s, dh = ih * s;
-  const pos = getComputedStyle(heroImg).objectPosition.split(' ').map(v => parseFloat(v) / 100);
-  const ox = (W - dw) * pos[0], oy = (H - dh) * pos[1];
-  const map = ([fx, fy]) => [(ox + fx * dw) / W * 100, (oy + fy * dh) / H * 100];
-  const [bx, by] = map(BODY), [tx, ty] = map(TIP);
-  hero.style.setProperty('--beam-x', bx + '%'); hero.style.setProperty('--beam-h', (by - 4) + '%');
-  hero.style.setProperty('--tip-x', tx + '%'); hero.style.setProperty('--tip-y', ty + '%');
-}
-const lightHero = () => { placeHero(); requestAnimationFrame(() => hero.classList.add('is-lit')); };
+const lightHero = () => requestAnimationFrame(() => hero.classList.add('is-lit'));
 heroImg.complete ? lightHero() : heroImg.addEventListener('load', lightHero, { once: true });
-addEventListener('resize', placeHero);
 if (finePointer && !reduced) {
   hero.addEventListener('pointermove', e => {
     const r = hero.getBoundingClientRect(), dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;

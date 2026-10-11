@@ -93,9 +93,6 @@ export function initPresent({ reduced = false } = {}) {
     clearTimeout(enterTimers.get(a));
     a.classList.remove('is-entering'); void a.offsetWidth; a.classList.add('is-entering');
     enterTimers.set(a, setTimeout(() => a.classList.remove('is-entering'), ENTER_MS));
-    if (a === t00 && !reduced && t00.classList.contains('is-lit')) {   // feixe e jatos disparam de novo
-      t00.classList.remove('is-lit'); void t00.offsetWidth; t00.classList.add('is-lit');
-    }
   }
   function warm(i) {                    // imagens dos vizinhos começam a carregar antes de serem pedidas
     [i - 1, i + 1].forEach(k => acts[k] && $$('img[loading="lazy"]', acts[k]).forEach(img => { img.loading = 'eager'; }));

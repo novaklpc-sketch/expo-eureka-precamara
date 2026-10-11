@@ -23,7 +23,6 @@
   --ok:#3ddc84;
   --grad-red:linear-gradient(180deg,var(--red-2),var(--red));
   --grad-jet:linear-gradient(90deg,var(--spark) 0%,var(--red-2) 18%,var(--red) 55%,rgba(255,122,47,0) 100%);
-  --grad-beam:linear-gradient(180deg,rgba(255,244,236,0) 0%,var(--spark) 60%,var(--red-2) 100%);
   --haze:radial-gradient(60% 40% at 50% 100%,rgba(223,37,49,.35),rgba(223,37,49,0) 70%);
   --glow:0 0 25px rgba(223,37,49,.35),0 8px 40px rgba(223,37,49,.18);
 
@@ -54,7 +53,6 @@
 
   /* ---------- movimento ---------- */
   --d-fast:200ms; --d-base:300ms; --d-reveal:600ms; --stagger:70ms;
-  --d-beam:2000ms; --d-jets:1200ms;
   --e-out:cubic-bezier(.16,1,.3,1);
   --e-inout:cubic-bezier(.77,0,.175,1);
 }
@@ -65,5 +63,5 @@
 }
 
 @media (prefers-reduced-motion:reduce){
-  :root{ --d-beam:0ms; --d-jets:0ms; --d-reveal:200ms; --stagger:0ms; }
+  :root{ --d-reveal:200ms; --stagger:0ms; }
 }
