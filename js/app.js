@@ -8,10 +8,23 @@ const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 document.documentElement.classList.remove('no-js');
 
 /* ---------- revelação (sobe 12 px + opacidade, escalonada por grupo) ---------- */
+/* títulos de capítulo acendem linha a linha (spec 003, etapa 4): cada palavra vira um span com o índice da sua
+ * linha medida no layout atual; as palavras da mesma linha esmaecem juntas, 90 ms depois da linha anterior.
+ * O cabeçalho continua um único h2 com o texto inteiro; só se divide uma vez, na hora de entrar. */
+function linhas(h) {
+  if (h.dataset.linhas || h.children.length || !h.textContent.trim()) return;
+  const palavras = h.textContent.trim().split(/\s+/);
+  h.textContent = '';
+  const spans = palavras.map((p, i) => { const s = document.createElement('span'); s.className = 'hl'; s.textContent = p; h.append(s); if (i < palavras.length - 1) h.append(' '); return s; });
+  const tops = spans.map(s => s.offsetTop); let n = -1, ultimo = null;
+  spans.forEach((s, i) => { if (ultimo === null || Math.abs(tops[i] - ultimo) > 2) { n++; ultimo = tops[i]; } s.style.setProperty('--i', n); });
+  h.dataset.linhas = n + 1; h.classList.add('has-lines');
+}
 const revealIO = new IntersectionObserver(es => es.forEach(e => {
   if (!e.isIntersecting) return;
   const el = e.target, sib = $$('.rv', el.parentElement);
   el.style.setProperty('--i', Math.max(0, sib.indexOf(el)));
+  if (!reduced && el.matches('.h2')) linhas(el);
   el.classList.add('is-in'); revealIO.unobserve(el);
   $$('[data-count]', el).concat(el.matches('[data-count]') ? [el] : []).forEach(countUp);
 }), { rootMargin: '0px 0px -8% 0px' });

@@ -98,6 +98,9 @@ html:not(.no-js) #t06:not(.is-near) .t06-stage{background-image:none!important}
 /* revelação */
 .rv{opacity:0;transition:opacity var(--d-reveal) var(--e-out);transition-delay:calc(var(--i,0) * var(--stagger))}   /* só esmaece: o único movimento orquestrado é a entrada (feixe e jatos) */
 .rv.is-in{opacity:1}
+.rv.has-lines{opacity:1;transition:none}   /* o título já está visível; quem esmaece são as linhas */
+.has-lines .hl{opacity:0;transition:opacity var(--d-reveal) var(--e-out);transition-delay:calc(var(--i,0) * var(--d-line))}
+.rv.is-in .hl{opacity:1}
 .no-js .rv{opacity:1}
 
 /* ---------- T00 entrada ---------- */
