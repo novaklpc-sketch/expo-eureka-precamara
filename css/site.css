@@ -180,7 +180,6 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .cut-stage.cad-ready .cut-frame{display:none}
 .cad-canvas:focus-visible{outline:2px solid #fff;outline-offset:-2px}
 .cut-stage canvas{position:absolute;inset:0;width:100%!important;height:100%!important}
-.note-tip{position:absolute;right:34px;top:32px;z-index:3;font-size:14px;color:rgba(255,255,255,.8);padding-left:26px;border-left:1px solid rgba(255,255,255,.6)}
 .cut .cap{margin-top:12px}
 .dots{display:flex;justify-content:center;gap:10px;margin:18px 0}
 .dots button{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;background:transparent;cursor:pointer;border-radius:50%}
@@ -376,7 +375,7 @@ a.doi:hover{color:var(--text-2);text-decoration-color:currentColor}
   .scrolly .lstep{margin-bottom:46vh}
   .lean{padding:12px 12px 8px}
   .lean-chart{height:38vh;min-height:240px}
-  .lean-cap,.lean-head .meta,.synth,.dots,.note-tip{display:none}
+  .lean-cap,.lean-head .meta,.synth,.dots{display:none}
   .cut{padding:10px}
   .cut .cap{font-size:12px}
   .just,.lead,.refs li{hyphens:auto;-webkit-hyphens:auto}
