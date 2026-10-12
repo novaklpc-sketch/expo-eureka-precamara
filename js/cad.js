@@ -1,7 +1,7 @@
 /* Visualizador 3D da malha real do CAD da pré-câmara (revisão V4), usado em duas seções:
  *  - T03 (mode 't03'): câmera fixa, peça deitada com a ponta à direita e cortada pelo eixo; uma camada 2D
  *    (SVG) desenha a luz de cada passo (carga, injeção, centelha, jatos) sobre os pontos projetados da malha.
- *  - T06 (mode 't06'): peça em 3/4, gira sozinha até o primeiro toque; arrastar, pinça/roda e setas;
+ *  - T06 (mode 't06'): peça em 3/4, gira em repouso (6°/s, até 30 fps) até o primeiro gesto e não volta; arrastar, pinça/roda e setas;
  *    modos girar / corte / frente.
  * Malha: assets/pre-camara-cad.bin, Float32 intercalado (posição + normal), triângulos sem índice, em mm.
  * A ponta (cúpula com os orifícios) é achada pela malha: é a extremidade de menor raio. A tomada da vela
@@ -167,7 +167,7 @@ export async function createCadViewer(container, opts = {}) {
   // ── estado de câmera e animação ──
   const st = {
     w: 0, h: 0, visivel: false, oculto: document.hidden, perdido: false, rodando: false, raf: 0, t: 0,
-    yaw: 0, pitch: 0, zoom: 1, frente: 0, vy: 0, auto: false, arrastando: false, entrou: false, modo: 'girar', passo: 1,
+    yaw: 0, pitch: 0, zoom: 1, frente: 0, vy: 0, auto: false, tocado: false, arrastando: false, entrou: false, modo: 'girar', passo: 1, ultimoQuadro: 0,
   };
   const T03 = { yaw: 24 * DEG, pitch: 17 * DEG };
   const T06 = { yaw: 34 * DEG, pitch: 20 * DEG };
@@ -418,10 +418,11 @@ export async function createCadViewer(container, opts = {}) {
     return podeRodar() && (tweens.length > 0 || st.auto || st.arrastando || Math.abs(st.vy) > 1e-3);
   }
   function quadro(now) {
-    const dt = st.t ? Math.min(.05, (now - st.t) / 1000) : 0; st.t = now;
+    const bruto = st.t ? (now - st.t) / 1000 : 0, dt = Math.min(.05, bruto); st.t = now;
     passoTweens(now);
     if (mode === 't06') {
-      if (st.auto && !st.arrastando) st.yaw += 6 * DEG * dt;
+      // giro de repouso em tempo real (6 graus/s), mesmo quando o aparelho rende poucos quadros
+      if (st.auto && !st.arrastando) st.yaw += 6 * DEG * Math.min(.25, bruto);
       if (!st.arrastando && Math.abs(st.vy) > 1e-3) { st.yaw += st.vy * dt; st.vy *= Math.exp(-dt * 3.2); }
       // o corte acompanha o lado da câmera
       corte.normal.set(0, 0, Math.cos(st.yaw) >= 0 ? -1 : 1);
@@ -433,6 +434,10 @@ export async function createCadViewer(container, opts = {}) {
   }
   function tick(now) {
     st.raf = 0;
+    // giro de repouso: limitado a 30 fps (pula o quadro sem mexer no relógio; o dt acumula)
+    const soGiro = st.auto && !st.arrastando && tweens.length === 0 && Math.abs(st.vy) <= 1e-3;
+    if (soGiro && st.ultimoQuadro && now - st.ultimoQuadro < 32) { st.raf = requestAnimationFrame(tick); return; }
+    st.ultimoQuadro = now;
     quadro(now);
     if (precisaContinuar()) st.raf = requestAnimationFrame(tick);
     else { st.rodando = false; st.t = 0; }
@@ -458,17 +463,20 @@ export async function createCadViewer(container, opts = {}) {
     canvas.style.cursor = 'grab';
     const ponteiros = new Map();
     let pinca = 0, ultimo = 0;
-    const tocar = () => { st.auto = false; };
+    // gesto do leitor: o giro de repouso para e não volta nesta visita (tocado); o pointerdown só pausa,
+    // porque num celular ele também abre a rolagem da página (pointercancel devolve o giro)
+    const tocar = () => { st.auto = false; st.tocado = true; };
     on(canvas, 'pointerdown', e => {
       ponteiros.set(e.pointerId, { x: e.clientX, y: e.clientY });
       try { canvas.setPointerCapture(e.pointerId); } catch (er) { /* nada */ }
-      tocar(); st.arrastando = true; st.vy = 0; ultimo = performance.now();
+      st.auto = false; st.arrastando = true; st.vy = 0; ultimo = performance.now();
       if (ponteiros.size === 2) { const [a, b] = [...ponteiros.values()]; pinca = Math.hypot(a.x - b.x, a.y - b.y); }
       canvas.style.cursor = 'grabbing'; pedir();
     });
     on(canvas, 'pointermove', e => {
       const p = ponteiros.get(e.pointerId); if (!p) return;
       const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+      if (dx || dy) st.tocado = true;
       if (ponteiros.size >= 2) {
         const [a, b] = [...ponteiros.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
         if (pinca > 0) st.zoom = clamp(st.zoom * d / pinca, .7, 1.8);
@@ -482,8 +490,10 @@ export async function createCadViewer(container, opts = {}) {
     });
     const soltar = e => {
       ponteiros.delete(e.pointerId); pinca = 0;
+      if (e.type === 'pointerup') st.tocado = true;
       if (ponteiros.size) return;
       st.arrastando = false; canvas.style.cursor = 'grab';
+      if (e.type === 'pointercancel' && !st.tocado && st.modo === 'girar' && !reduced) st.auto = true;
       if (performance.now() - ultimo > 80) st.vy = 0;
       st.vy = clamp(st.vy, -6, 6); if (reduced) st.vy = 0;
       pedir();
@@ -515,12 +525,12 @@ export async function createCadViewer(container, opts = {}) {
 
   function setMode(m) {
     if (mode !== 't06' || !['girar', 'corte', 'frente'].includes(m)) return;
-    st.modo = m; st.vy = 0;
+    st.modo = m; st.vy = 0; st.tocado = true;
     const dur = 1000;
     if (m === 'girar') {
       tween(st, 'corteK', L, dur); tween(st, 'frente', 0, dur);
       tween(st, 'yaw', perto(st.yaw, T06.yaw), dur); tween(st, 'pitch', T06.pitch, dur); tween(st, 'zoom', 1, dur);
-      st.auto = !reduced;
+      st.auto = false;
     } else if (m === 'corte') {
       st.auto = false;
       tween(st, 'frente', 0, dur); tween(st, 'yaw', perto(st.yaw, T06.yaw), dur); tween(st, 'pitch', 24 * DEG, dur); tween(st, 'zoom', 1, dur);
@@ -550,7 +560,7 @@ export async function createCadViewer(container, opts = {}) {
     if (st.entrou || mode !== 't06') return;
     st.entrou = true;
     if (reduced) { st.yaw = T06.yaw; st.auto = false; }
-    else { tween(st, 'yaw', T06.yaw, 1200, easeOut); st.timer = setTimeout(() => { if (st.modo === 'girar' && !st.arrastando && st.vy === 0) { st.auto = true; pedir(); } }, 1150); }
+    else { tween(st, 'yaw', T06.yaw, 1200, easeOut); st.timer = setTimeout(() => { if (st.modo === 'girar' && !st.tocado && !st.arrastando && st.vy === 0) { st.auto = true; pedir(); } }, 1150); }
   }
 
   // ── observadores ──
@@ -578,6 +588,7 @@ export async function createCadViewer(container, opts = {}) {
 
   api.setStep = setStep;
   api.setMode = setMode;
+  api.estado = () => ({ auto: st.auto, tocado: st.tocado, yaw: st.yaw, rodando: st.rodando, visivel: st.visivel });
   api.dispose = () => {
     parar(); clearTimeout(st.timer); ro.disconnect(); io.disconnect(); st.visivel = false;
     for (const [a, ev, fn, o] of ouvintes) a.removeEventListener(ev, fn, o);
