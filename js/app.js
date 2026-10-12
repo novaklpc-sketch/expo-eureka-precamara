@@ -32,7 +32,7 @@ const bar = $('#bar'), prog = $('.progress span');
 const onScroll = () => {
   const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
   bar.classList.toggle('is-scrolled', y > 40);
-  prog.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+  prog.style.transform = `scaleX(${max > 0 ? (y / max).toFixed(4) : 0})`;   // transform: sem layout a cada rolagem
 };
 addEventListener('scroll', onScroll, { passive: true }); onScroll();
 const navLinks = $$('.nav a'), tabLinks = $$('.tabs [data-tab]');
@@ -59,6 +59,9 @@ if (finePointer && !reduced) {
 /* ---------- fundos e gráficos adiados: cada seção carrega o seu quando chega a 900 px da tela ---------- */
 const nearIO = new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-near'); o.unobserve(e.target); } }), { rootMargin: '900px 0px' });
 $$('.sec').forEach(s => nearIO.observe(s));
+/* seção visível ou não: as animações infinitas (pulsos) pausam fora da tela */
+const visIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-visible', e.isIntersecting)));
+$$('.sec').forEach(s => visIO.observe(s));
 const whenNear = (el, fn, margin = '1000px 0px') => new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { o.disconnect(); fn(); } }, { rootMargin: margin }).observe(el);
 
 /* ---------- T02: gráfico λ real (componente do atlas-v6) ---------- */
