@@ -102,7 +102,11 @@ html:not(.no-js) #t06:not(.is-near) .t06-stage{background-image:none!important}
 
 /* ---------- T00 entrada ---------- */
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:calc(var(--bar-h) + 40px) 0 40px;overflow:hidden}
-.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg{position:absolute;inset:0;z-index:0;transform:scale(1.04)}   /* cena de abertura: a foto assenta e o texto acende em sequência, uma vez por visita */
+.hero.is-lit .hero-bg{transform:none;transition:transform 1200ms var(--e-out)}
+.sc{opacity:0;transition:opacity var(--d-reveal) var(--e-out);transition-delay:calc(var(--i,0) * var(--stagger) + 150ms)}
+.hero.is-lit .sc{opacity:1}
+.no-js .sc{opacity:1}.no-js .hero-bg{transform:none}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;will-change:transform}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,5,.86) 0%,rgba(5,5,5,.35) 42%,rgba(5,5,5,0) 70%),linear-gradient(0deg,rgba(5,5,5,.92) 0%,rgba(5,5,5,0) 38%)}
 .hero-in{position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;gap:40px}
@@ -414,5 +418,7 @@ a.doi:hover{color:var(--text-2);text-decoration-color:currentColor}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .rv{transition:opacity 200ms}
+  .sc{transition:opacity 200ms;transition-delay:0ms}
+  .hero-bg{transform:none;transition:none}
   .chip-live::before,.pend{animation:none}
 }

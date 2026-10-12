@@ -47,8 +47,11 @@ $$('.act').forEach(s => navIO.observe(s));
 
 /* ---------- T00: a foto está pronta; marca a entrada como acesa ---------- */
 const hero = $('#t00'), heroImg = $('.hero-bg img');
-const lightHero = () => requestAnimationFrame(() => hero.classList.add('is-lit'));
-heroImg.complete ? lightHero() : heroImg.addEventListener('load', lightHero, { once: true });
+/* cena de abertura: espera a foto (não a fonte); dispara uma vez; nunca deixa o texto escondido se a foto falhar ou demorar */
+let lit = false;
+const lightHero = () => { if (lit) return; lit = true; void hero.offsetWidth; requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add('is-lit'))); };
+if (heroImg.complete && heroImg.naturalWidth > 0) lightHero();
+else { heroImg.addEventListener('load', lightHero, { once: true }); heroImg.addEventListener('error', lightHero, { once: true }); setTimeout(lightHero, 1500); }
 if (finePointer && !reduced) {
   hero.addEventListener('pointermove', e => {
     const r = hero.getBoundingClientRect(), dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
