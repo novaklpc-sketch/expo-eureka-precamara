@@ -260,6 +260,7 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .specs div:first-child{border-top:0}
 .specs dt{font:400 12px/1.6 var(--f-mono);letter-spacing:.08em;color:var(--text-3)}
 .specs dd{font:400 15px/1.5 var(--f-mono);color:#fff}
+.specs dd.specs-note{font:400 15px/1.55 var(--f-sans);color:var(--text-2);text-align:justify;hyphens:auto;-webkit-hyphens:auto}
 .photo-card{display:flex;align-items:center;gap:20px;margin-top:20px;padding:12px;width:100%;text-align:left}
 .photo-card img{width:110px;height:110px;object-fit:cover;border-radius:10px}
 .photo-card>span{display:flex;flex-direction:column;gap:6px;font-size:15px;color:#fff}
