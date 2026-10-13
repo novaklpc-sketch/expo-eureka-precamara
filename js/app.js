@@ -20,14 +20,17 @@ function linhas(h) {
   spans.forEach((s, i) => { if (ultimo === null || Math.abs(tops[i] - ultimo) > 2) { n++; ultimo = tops[i]; } s.style.setProperty('--i', n); });
   h.dataset.linhas = n + 1; h.classList.add('has-lines');
 }
-const revealIO = new IntersectionObserver(es => es.forEach(e => {
+const revealIO = new IntersectionObserver(es => {
+  const feitos = $$('[data-i].is-in').length;   /* cascata (data-i): a ordem é relativa ao que já entrou, para a lista horizontal do celular não atrasar */
+  es.forEach(e => {
   if (!e.isIntersecting) return;
   const el = e.target, sib = $$('.rv', el.parentElement);
-  el.style.setProperty('--i', Math.max(0, sib.indexOf(el)));
+  el.style.setProperty('--i', el.dataset.i != null ? Math.max(0, +el.dataset.i - feitos) : Math.max(0, sib.indexOf(el)));
   if (!reduced && el.matches('.h2')) linhas(el);
   el.classList.add('is-in'); revealIO.unobserve(el);
   $$('[data-count]', el).concat(el.matches('[data-count]') ? [el] : []).forEach(countUp);
-}), { rootMargin: '0px 0px -8% 0px' });
+  });
+}, { rootMargin: '0px 0px -8% 0px' });
 $$('.rv').forEach(el => revealIO.observe(el));
 
 /* ---------- números-totem contam uma vez (mesma casa decimal) ---------- */
