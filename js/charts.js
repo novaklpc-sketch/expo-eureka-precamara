@@ -26,8 +26,8 @@ function desenhaE5(rotulo, e) {
   const tx = e ? 2 : 8, fs = e ? 12.5 : 13.5, lh = e ? 17.5 : 19;
   txt(svg, tx, e ? 14 : 34, 'VELA MEDIDA · PRÉ-CÂMARA ESPERADA', { a: 'start', f: MONO, s: e ? 10.5 : 12, c: '#FF5A4F' });
   txt(svg, tx, e ? 40 : 64, 'Até onde a mistura pode empobrecer', { a: 'start', s: e ? 16.5 : 20, w: 600, c: '#fff' });
-  (e ? ['Pontos: CoV da IMEP medido com a vela', 'original. A varredura parou em λ = 1,4, pela', 'fase da combustão e pela detonação, ainda', 'abaixo de 5 %. Curvas da pré-câmara ativa:', 'limites de Zhu et al. (2022), líquido', '(λ = 1,94) e vaporizado (2,12); os dados deste', 'motor entram quando os ensaios terminarem.']
-     : ['Pontos: CoV da IMEP medido com a vela original. A', 'varredura parou em λ = 1,4, pela fase da combustão e', 'pela detonação, ainda abaixo de 5 %. Curvas da pré-', 'câmara ativa: limites de Zhu et al. (2022), líquido', '(λ = 1,94) e vaporizado (2,12); os dados deste motor', 'entram quando os ensaios terminarem.'])
+  (e ? ['Pontos: CoV da IMEP medido com a vela', 'original. A varredura parou em λ = 1,4, pela', 'fase da combustão e pela detonação, ainda', 'abaixo de 5 %. Curvas da pré-câmara ativa:', 'limites de Zhu et al. (2022), líquido', '(λ = 1,94) e vaporizado (2,12); os dados deste', 'motor entram quando os ensaios terminarem.']
+     : ['Pontos: CoV da IMEP medido com a vela original. A', 'varredura parou em λ = 1,4, pela fase da combustão e', 'pela detonação, ainda abaixo de 5 %. Curvas da pré-', 'câmara ativa: limites de Zhu et al. (2022), líquido', '(λ = 1,94) e vaporizado (2,12); os dados deste motor', 'entram quando os ensaios terminarem.'])
     .forEach((l, i) => txt(svg, tx, (e ? 66 : 96) + i * lh, l, { a: 'start', s: fs, c: W + '.68)' }));
   txt(svg, tx, e ? 194 : 226, 'Fontes: os autores, 2026 (vela, medido); Zhu et al. (2022).', { a: 'start', s: e ? 10.5 : 11.5, c: W + '.42)' });
   const P = e ? { l: 34, r: w - 6, t: 226, b: 382 } : { l: 470, r: w - 20, t: 24, b: h - 40 }, L0 = .9, L1 = 2.3, Y1 = 10;
@@ -39,7 +39,7 @@ function desenhaE5(rotulo, e) {
   if (e) txt(svg, P.l - 4, P.t - 8, 'CoV IMEP (%)', { f: MONO, s: ft, a: 'start', c: W + '.5)' });
   else txt(svg, P.l - 10, P.t + 10, 'CoV IMEP (%)', { f: MONO, s: 12, a: 'end', c: W + '.5)' });
   svg.append(el('line', { x1: P.l, x2: P.r, y1: Y(5), y2: Y(5), stroke: '#FF5A4F', 'stroke-dasharray': '5 5' }));
-  txt(svg, P.l - (e ? 5 : 10), Y(5) + 4, '5 %', { f: MONO, s: ft, a: 'end', c: '#FF5A4F' });
+  txt(svg, P.l - (e ? 5 : 10), Y(5) + 4, '5 %', { f: MONO, s: ft, a: 'end', c: '#FF5A4F' });
   const k = (5 - (1 + .45 * (1.94 - .9))) / (1.94 - 1.7) ** 2.4, ativa = l => 1 + .45 * (l - .9) + k * Math.max(0, l - 1.7) ** 2.4;
   /* combustível vaporizado: mesma forma, cruza 5 % em 2,12 (curva tracejada, mais clara) */
   const kv = (5 - (1 + .45 * (2.12 - .9))) / (2.12 - 1.85) ** 2.4, vapor = l => 1 + .45 * (l - .9) + kv * Math.max(0, l - 1.85) ** 2.4;
@@ -105,7 +105,7 @@ function desenhaE6(rotulo, e) {
   if (e) txt(svg, 4, P.b + 70 + 5 * 18 + 4, `λ = 1,4 · Pmáx ${br(M.pmax.toFixed(1))} bar a ${sg(M.apmax)}°`, { f: MONO, s: 10.5, a: 'start', c: W + '.8)' });
   else txt(svg, X(66), P.t + 62, `λ = 1,4 · Pmáx ${br(M.pmax.toFixed(1))} bar a ${sg(M.apmax)}°`, { f: MONO, s: 13, c: W + '.8)' });
   /* legenda fora das curvas, embaixo */
-  [['Pressão com combustão (vela, λ = 1,4)', '#fff', ''], ['Pressão arrastada (2500 rpm)', W + '.75)', '8 6'], ['Fração mássica queimada (%)', '#FF3B3B', ''], ['desenvolvimento inicial (centelha a 10 %)', 'rgba(120,180,140,.5)', 'band'], ['queima rápida (10–90 %)', 'rgba(223,37,49,.45)', 'band']]
+  [['Pressão com combustão (vela, λ = 1,4)', '#fff', ''], ['Pressão arrastada (2500 rpm)', W + '.75)', '8 6'], ['Fração mássica queimada (%)', '#FF3B3B', ''], ['desenvolvimento inicial (centelha a 10 %)', 'rgba(120,180,140,.5)', 'band'], ['queima rápida (10–90 %)', 'rgba(223,37,49,.45)', 'band']]
     .forEach(([t, c, d], i) => {
       /* no celular, uma coluna embaixo do eixo */
       const x = e ? 4 : 60 + (i % 3) * 380, y = e ? P.b + 70 + i * 18 : h - 22 + (i < 3 ? -26 : 0), lw = e ? 24 : 32;

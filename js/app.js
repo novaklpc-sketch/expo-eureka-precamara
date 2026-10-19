@@ -32,6 +32,10 @@ const revealIO = new IntersectionObserver(es => {
   });
 }, { rootMargin: '0px 0px -8% 0px' });
 $$('.rv').forEach(el => revealIO.observe(el));
+/* faixas horizontais do celular (T05, T08): sem botões dentro, a faixa recebe o foco do teclado quando há o que rolar */
+const faixas = $$('.timeline, .grid4');
+const ajustaFaixas = () => faixas.forEach(f => { if (f.scrollWidth > f.clientWidth + 1) f.tabIndex = 0; else f.removeAttribute('tabindex'); });
+addEventListener('resize', ajustaFaixas); ajustaFaixas();
 
 /* ---------- números-totem contam uma vez (mesma casa decimal) ---------- */
 function countUp(el) {

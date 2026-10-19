@@ -63,12 +63,14 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   // limiar do CoV (5 %) e rótulos do limite
   const cov=panels[2];
   g.append(el('line',{class:'lean-threshold',x1:plot.left,x2:W-plot.right,y1:cov.y(5),y2:cov.y(5)}));
-  if(!small())g.append(el('text',{class:'lean-note',x:plot.left+6,y:cov.y(5)-6},'corte do CoV · 5 %'));
+  if(!small())g.append(el('text',{class:'lean-note',x:plot.left+6,y:cov.y(5)-6},'corte do CoV · 5 %'));
   // CoV da IMEP medido com a vela original (pontos sobre a curva da literatura)
   const mx=VELA.cov.lam.map(plot.x),my=VELA.cov.cov.map(cov.y);
   g.append(el('path',{class:'lean-meas-line',d:mx.map((x,i)=>(i?'L':'M')+x.toFixed(1)+' '+my[i].toFixed(1)).join('')}));
   mx.forEach((x,i)=>g.append(el('circle',{class:'lean-meas',cx:x,cy:my[i],r:4.5})));
-  g.append(el('text',{class:'lean-note lean-note-meas',x:plot.x(1.2),y:Math.min(...my)-12,'text-anchor':'middle'},small()?'medido':'medido com a vela'));
+  // rótulo dos pontos; some enquanto o cursor está na faixa medida (a leitura do cursor já diz "medido")
+  const notaMedida=el('text',{class:'lean-note lean-note-meas lean-note-hide',x:plot.x(1.2),y:Math.min(...my)-12,'text-anchor':'middle'},small()?'medido':'medido com a vela');
+  g.append(notaMedida);
   // fim da varredura medida, em todos os painéis
   const xv=plot.x(LAM_VELA);
   g.append(el('line',{class:'lean-meas-limit',x1:xv,x2:xv,y1:plot.top-6,y2:H-plot.bottom+4}));
@@ -79,7 +81,8 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   const eta=panels[0],ya=eta.y(45.5);
   g.append(el('line',{class:'lean-arrow',x1:xv+2,x2:xe,y1:ya,y2:ya,'marker-end':'url(#lean-head)'}));
   g.append(el('text',{class:'lean-note lean-note-red',x:(xv+xe)/2,y:ya-7,'text-anchor':'middle'},small()?'extensão pretendida':'extensão pretendida com pré-câmara'));
-  g.append(el('text',{class:'lean-note lean-note-meas',x:xv-6,y:ya+4,'text-anchor':'end'},small()?'vela: λ 1,4':'vela, medido: λ 1,4'));
+  // no celular não cabe ao lado de "extensão pretendida"; a linha pontilhada e o painel do CoV marcam o fim da varredura
+  if(!small())g.append(el('text',{class:'lean-note lean-note-meas',x:xv-6,y:ya+4,'text-anchor':'end'},'vela, medido: λ 1,4'));
   const defs=el('defs');const m=el('marker',{id:'lean-head',markerWidth:8,markerHeight:8,refX:7,refY:4,orient:'auto',markerUnits:'userSpaceOnUse'});m.append(el('path',{d:'M0 0 L8 4 L0 8 Z',class:'lean-arrow-head'}));defs.append(m);svg.append(defs);
   // eixo λ
   const yb=H-plot.bottom+4;
@@ -87,7 +90,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   g.append(el('text',{class:'lean-axis',x:W-plot.right,y:yb+18,'text-anchor':'end'},'λ →'));
   // camada do cursor
   const c=el('g',{class:'lean-cursor'});svg.append(c);
-  layers={group:c,line:el('line',{class:'lean-cursor-line',y1:plot.top-6,y2:H-plot.bottom+4}),dots:[],rings:[],labels:[],lam:el('text',{class:'lean-lambda','text-anchor':'middle'})};
+  layers={group:c,line:el('line',{class:'lean-cursor-line',y1:plot.top-6,y2:H-plot.bottom+4}),dots:[],rings:[],labels:[],lam:el('text',{class:'lean-lambda','text-anchor':'middle'}),nota:notaMedida};
   c.append(layers.line);
   panels.forEach(p=>{const r=el('circle',{class:'lean-ring',r:6});const d=el('circle',{class:'lean-dot',r:5});const t=el('text',{class:'lean-value'});c.append(r,d,t);layers.rings.push(r);layers.dots.push(d);layers.labels.push(t)});
   c.append(layers.lam);
@@ -102,7 +105,9 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
    const m=p.key==='cov'?covMedido(l):null,v=m??curves[p.key](l),y=p.y(v);
    layers.dots[i].setAttribute('cx',x);layers.dots[i].setAttribute('cy',y);layers.rings[i].setAttribute('cx',x);layers.rings[i].setAttribute('cy',y);
    layers.dots[i].classList.toggle('is-meas',m!=null);
-   const t=layers.labels[i],flip=x>W-plot.right-90;
+   // leitura medida: à esquerda do cursor a partir de λ 1,2, sobre os próprios pontos, longe da curva e dos rótulos da literatura
+   const t=layers.labels[i],flip=m!=null?l>1.2:x>W-plot.right-90;
+   if(p.key==='cov')layers.nota.classList.toggle('is-hidden',m!=null);
    t.setAttribute('x',flip?x-10:x+10);t.setAttribute('y',y-11);t.setAttribute('text-anchor',flip?'end':'start');t.textContent=(m!=null?'medido ':'')+p.fmt(v);
    t.classList.toggle('is-meas',m!=null);
   });

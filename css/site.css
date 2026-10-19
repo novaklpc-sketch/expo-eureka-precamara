@@ -168,6 +168,7 @@ html:not(.no-js) #t06:not(.is-near) .t06-stage{background-image:none!important}
 .lean-limit{stroke:var(--red);stroke-width:1.5;stroke-dasharray:6 5}
 text.lean-note{font-size:12px;fill:var(--text-3)}
 .lean-note-red{fill:var(--red-text)!important}
+.lean-note-hide{transition:opacity 200ms var(--e-out)}.lean-note-hide.is-hidden{opacity:0}
 .lean-arrow{stroke:var(--red-text);stroke-width:1.4}
 .lean-arrow-head{fill:var(--red-text)}
 .lean-cursor-line{stroke:rgba(255,255,255,.7);stroke-width:1}
@@ -418,6 +419,11 @@ a.doi:hover,a.doi:focus-visible{color:var(--text-2);background-size:100% 1px,100
   .totem-xl{flex-direction:column;align-items:flex-start;gap:6px}
   .phases{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding-bottom:10px;margin-inline:calc(-1*var(--gutter));padding-inline:var(--gutter)}
   .phases li{flex:0 0 72%;scroll-snap-align:center}
+  /* T05 e T08: mesma faixa horizontal da T07 (protótipo de 19/10/2026); cards de texto um pouco mais largos para não ficarem altos demais */
+  .timeline,.grid4{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding-bottom:10px;margin-inline:calc(-1*var(--gutter));padding-inline:var(--gutter);scroll-padding-inline:var(--gutter)}
+  .timeline>.tl,.grid4>.card{flex:0 0 80%;scroll-snap-align:start}
+  .timeline>.rv,.grid4>.rv{transition-delay:0s}   /* o card que entra arrastando não espera a cascata */
+  .timeline:focus-visible,.grid4:focus-visible{outline:2px solid var(--red-text);outline-offset:4px}
   .progress-bar{grid-template-columns:repeat(6,1fr)}
   .progress-bar span{grid-column:1/-1;margin:6px 0 0}
   .t08-head{flex-direction:column}
