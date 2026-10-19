@@ -6,6 +6,12 @@
  */
 const L0=0.9,L1=1.75;
 import {clamp} from './util.js';
+import {VELA} from './dados-vela.js';
+// fim da varredura medida com a vela original (os autores, 2026): λ 1,4 pela sonda da gestão
+const LAM_VELA=VELA.cov.lam[VELA.cov.lam.length-1];
+// CoV medido no λ do cursor (interpolação linear entre os pontos); fora da varredura, null
+const covMedido=l=>{const L=VELA.cov.lam,C=VELA.cov.cov;if(l<L[0]-.005||l>L[L.length-1]+.005)return null;
+ for(let i=1;i<L.length;i++)if(l<=L[i])return C[i-1]+(C[i]-C[i-1])*clamp((l-L[i-1])/(L[i]-L[i-1]),0,1);return C[C.length-1]};
 export const curves={
  eta:l=>34+9.5*(l-0.9)-260*Math.max(0,l-1.42)**2,
  nox:l=>100*Math.exp(-((l-1.08)**2)/(2*0.11**2)),
@@ -20,12 +26,12 @@ export const el=(n,a={},t)=>{const e=document.createElementNS(SVGNS,n);for(const
 
 export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  const svg=el('svg',{class:'lean-svg',role:'img','aria-labelledby':'lean-svg-title'});
- svg.append(el('title',{id:'lean-svg-title'},'Rendimento térmico, NOx relativo e CoV da IMEP em função do fator lambda, com o limite de operação pobre'));
+ svg.append(el('title',{id:'lean-svg-title'},'Rendimento térmico, NOx relativo e CoV da IMEP em função do fator lambda, com o limite de operação pobre da literatura e o CoV medido com a vela original até lambda 1,4'));
  host.append(svg);
  const panels=[
   {key:'eta',name:'Rendimento térmico',unit:'%',min:30,max:48,ticks:[32,40,48],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
   {key:'nox',name:'NOx relativo',unit:'%',min:0,max:105,ticks:[0,50,100],fmt:v=>Math.round(v)+' %'},
-  {key:'cov',name:'CoV da IMEP',unit:'%',min:0,max:30,ticks:[0,5,15,30],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
+  {key:'cov',name:'CoV da IMEP',unit:'%',min:0,max:20,ticks:[0,5,10,20],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
  ];
  let W=0,H=0,plot=null,lambda=1.0,pointerLambda=null,layers={};
  const small=()=>W<560;
@@ -58,13 +64,22 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   const cov=panels[2];
   g.append(el('line',{class:'lean-threshold',x1:plot.left,x2:W-plot.right,y1:cov.y(5),y2:cov.y(5)}));
   if(!small())g.append(el('text',{class:'lean-note',x:plot.left+6,y:cov.y(5)-6},'corte do CoV · 5 %'));
+  // CoV da IMEP medido com a vela original (pontos sobre a curva da literatura)
+  const mx=VELA.cov.lam.map(plot.x),my=VELA.cov.cov.map(cov.y);
+  g.append(el('path',{class:'lean-meas-line',d:mx.map((x,i)=>(i?'L':'M')+x.toFixed(1)+' '+my[i].toFixed(1)).join('')}));
+  mx.forEach((x,i)=>g.append(el('circle',{class:'lean-meas',cx:x,cy:my[i],r:4.5})));
+  g.append(el('text',{class:'lean-note lean-note-meas',x:plot.x(1.2),y:Math.min(...my)-12,'text-anchor':'middle'},small()?'medido':'medido com a vela'));
+  // fim da varredura medida, em todos os painéis
+  const xv=plot.x(LAM_VELA);
+  g.append(el('line',{class:'lean-meas-limit',x1:xv,x2:xv,y1:plot.top-6,y2:H-plot.bottom+4}));
   g.append(el('line',{class:'lean-limit',x1:xl,x2:xl,y1:plot.top-6,y2:H-plot.bottom+4}));
-  g.append(el('text',{class:'lean-note',x:xl-6,y:H-plot.bottom-4,'text-anchor':'end'},small()?'limite pobre':'limite de operação pobre'));
+  g.append(el('text',{class:'lean-note',x:xl+6,y:cov.y0+14,'text-anchor':'start'},small()?'literatura':'limite, literatura'));
   g.append(el('text',{class:'lean-note lean-note-red',x:(xl+plot.x(L1))/2,y:cov.y(cov.min)-6,'text-anchor':'middle'},small()?'instável':'instável (misfire)'));
   // extensão pretendida com a pré-câmara (painel do rendimento)
   const eta=panels[0],ya=eta.y(45.5);
-  g.append(el('line',{class:'lean-arrow',x1:xl+2,x2:xe,y1:ya,y2:ya,'marker-end':'url(#lean-head)'}));
-  g.append(el('text',{class:'lean-note lean-note-red',x:(xl+xe)/2,y:ya-7,'text-anchor':'middle'},small()?'extensão pretendida':'extensão pretendida com pré-câmara'));
+  g.append(el('line',{class:'lean-arrow',x1:xv+2,x2:xe,y1:ya,y2:ya,'marker-end':'url(#lean-head)'}));
+  g.append(el('text',{class:'lean-note lean-note-red',x:(xv+xe)/2,y:ya-7,'text-anchor':'middle'},small()?'extensão pretendida':'extensão pretendida com pré-câmara'));
+  g.append(el('text',{class:'lean-note lean-note-meas',x:xv-6,y:ya+4,'text-anchor':'end'},small()?'vela: λ 1,4':'vela, medido: λ 1,4'));
   const defs=el('defs');const m=el('marker',{id:'lean-head',markerWidth:8,markerHeight:8,refX:7,refY:4,orient:'auto',markerUnits:'userSpaceOnUse'});m.append(el('path',{d:'M0 0 L8 4 L0 8 Z',class:'lean-arrow-head'}));defs.append(m);svg.append(defs);
   // eixo λ
   const yb=H-plot.bottom+4;
@@ -83,10 +98,13 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   const l=pointerLambda??lambda,x=plot.x(l);
   layers.line.setAttribute('x1',x);layers.line.setAttribute('x2',x);
   panels.forEach((p,i)=>{
-   const v=curves[p.key](l),y=p.y(v);
+   // no painel do CoV, dentro da varredura medida, a leitura é a do ensaio com a vela, não a da curva da literatura
+   const m=p.key==='cov'?covMedido(l):null,v=m??curves[p.key](l),y=p.y(v);
    layers.dots[i].setAttribute('cx',x);layers.dots[i].setAttribute('cy',y);layers.rings[i].setAttribute('cx',x);layers.rings[i].setAttribute('cy',y);
+   layers.dots[i].classList.toggle('is-meas',m!=null);
    const t=layers.labels[i],flip=x>W-plot.right-90;
-   t.setAttribute('x',flip?x-10:x+10);t.setAttribute('y',y-11);t.setAttribute('text-anchor',flip?'end':'start');t.textContent=p.fmt(v);
+   t.setAttribute('x',flip?x-10:x+10);t.setAttribute('y',y-11);t.setAttribute('text-anchor',flip?'end':'start');t.textContent=(m!=null?'medido ':'')+p.fmt(v);
+   t.classList.toggle('is-meas',m!=null);
   });
   layers.lam.setAttribute('x',x);layers.lam.setAttribute('y',plot.top-26);layers.lam.textContent='λ = '+l.toFixed(2).replace('.',',');
   svg.classList.toggle('is-unstable',l>=LIMIT);
@@ -98,7 +116,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','Gráfico interativo do limite pobre. Use as setas para mover o fator lambda.');
  const live=document.createElement('p');live.className='sr-only';live.setAttribute('role','status');host.after(live);
  let liveT=0;
- const announce=()=>{clearTimeout(liveT);liveT=setTimeout(()=>{const l=pointerLambda??lambda;live.textContent=`λ ${l.toFixed(2).replace('.',',')}: rendimento ${curves.eta(l).toFixed(1).replace('.',',')} %, NOx relativo ${Math.round(curves.nox(l))} %, CoV da IMEP ${curves.cov(l).toFixed(1).replace('.',',')} %${l>=LIMIT?', região instável':''}.`},300)};
+ const announce=()=>{clearTimeout(liveT);liveT=setTimeout(()=>{const l=pointerLambda??lambda;live.textContent=`λ ${l.toFixed(2).replace('.',',')}: rendimento ${curves.eta(l).toFixed(1).replace('.',',')} %, NOx relativo ${Math.round(curves.nox(l))} %, CoV da IMEP ${(covMedido(l)??curves.cov(l)).toFixed(1).replace('.',',')} %${covMedido(l)!=null?', medido com a vela':''}${l>=LIMIT?', região instável':''}.`},300)};
  host.addEventListener('keydown',e=>{
   const step=e.shiftKey?.1:.01;let l=pointerLambda??lambda;
   if(e.key==='ArrowRight'||e.key==='ArrowUp')l+=step;else if(e.key==='ArrowLeft'||e.key==='ArrowDown')l-=step;
@@ -126,8 +144,9 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  };
 }
 
-/* Tabela acessível com valores amostrados das mesmas curvas */
+/* Tabela acessível com valores amostrados das mesmas curvas e o CoV medido com a vela */
 export function leanTable(){
- const rows=[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7].map(l=>`<tr><th scope="row">${l.toFixed(1).replace('.',',')}</th><td>${curves.eta(l).toFixed(1).replace('.',',')}</td><td>${Math.round(curves.nox(l))}</td><td>${curves.cov(l).toFixed(1).replace('.',',')}</td></tr>`).join('');
- return `<table><caption>Valores das curvas (comportamento qualitativo)</caption><thead><tr><th scope="col">λ</th><th scope="col">Rendimento (%)</th><th scope="col">NOx relativo (%)</th><th scope="col">CoV da IMEP (%)</th></tr></thead><tbody>${rows}</tbody></table>`;
+ const med=l=>{const i=VELA.cov.lam.findIndex(v=>Math.abs(v-l)<1e-6);return i<0?'–':VELA.cov.cov[i].toFixed(1).replace('.',',')};
+ const rows=[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7].map(l=>`<tr><th scope="row">${l.toFixed(1).replace('.',',')}</th><td>${curves.eta(l).toFixed(1).replace('.',',')}</td><td>${Math.round(curves.nox(l))}</td><td>${curves.cov(l).toFixed(1).replace('.',',')}</td><td>${med(l)}</td></tr>`).join('');
+ return `<table><caption>Curvas da literatura (comportamento qualitativo) e CoV medido com a vela original</caption><thead><tr><th scope="col">λ</th><th scope="col">Rendimento (%)</th><th scope="col">NOx relativo (%)</th><th scope="col">CoV da IMEP (%)</th><th scope="col">CoV medido (%)</th></tr></thead><tbody>${rows}</tbody></table>`;
 }

@@ -173,6 +173,11 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .lean-cursor-line{stroke:rgba(255,255,255,.7);stroke-width:1}
 .lean-svg.is-text .lean-cursor-line{stroke:var(--red)}
 .lean-dot{fill:#fff}
+.lean-dot.is-meas{fill:var(--red-text)}.lean-value.is-meas{fill:var(--red-text)}
+.lean-meas{fill:var(--bg);stroke:var(--red-text);stroke-width:2}
+.lean-meas-line{fill:none;stroke:var(--red-text);stroke-width:1.5;opacity:.8}
+.lean-meas-limit{stroke:rgba(255,255,255,.55);stroke-width:1;stroke-dasharray:2 4}
+.lean-note-meas{fill:var(--red-text)!important}
 .lean-value{font:500 12px var(--f-mono);fill:#fff}
 .lean-value,text.lean-note{paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
 .lean-lambda{font:600 14px var(--f-mono);fill:#fff}
@@ -309,6 +314,8 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 /* espaço reservado antes do SVG chegar: a mesma proporção dos desenhos (1200×300 e 1200×780), sem salto de layout */
 .chart-e5{aspect-ratio:1200/300}.chart-e6{aspect-ratio:1200/780}
 .chart-e6{max-width:980px;margin-inline:auto}
+/* no celular, os desenhos compactos de js/charts.js (340×478 e 340×470) */
+@media (max-width:600px){.chart-e5{aspect-ratio:340/478}.chart-e6{aspect-ratio:340/470}}
 .chartbox .cap{margin-top:10px;text-align:center}
 
 /* ---------- T10 ---------- */

@@ -102,9 +102,9 @@
             <p class="lstep-h"><span class="lstep-l">λ ≈ 1,25</span> Mais ar, mais rendimento.</p>
             <div class="lstep-body"><p class="just">O excesso de ar eleva a razão entre os calores específicos da carga, reduz as perdas de calor para as paredes e diminui as perdas por bombeamento em carga parcial. O rendimento térmico sobe e a formação de NO<sub>x</sub> cai.</p><p class="src">Alvarez et al. (2018); Heywood (2018)</p></div>
           </li>
-          <li class="lstep" data-lambda="1.50" data-step="3">
-            <p class="lstep-h"><span class="lstep-l">λ ≈ 1,50</span> O limite da vela convencional.</p>
-            <div class="lstep-body"><p class="just">A chama se propaga mais devagar e a combustão passa a variar de um ciclo para outro. Quando o coeficiente de variação da pressão média efetiva indicada ultrapassa 5 %, surgem falhas de combustão e a operação deixa de ser estável.</p><p class="short">A combustão passa a variar de um ciclo para outro; acima de 5 % de CoV da IMEP, surgem falhas.</p><p class="src">Heywood (2018); Zhu et al. (2022)</p></div>
+          <li class="lstep" data-lambda="1.40" data-step="3">
+            <p class="lstep-h"><span class="lstep-l">λ = 1,40</span> O limite da vela, medido.</p>
+            <div class="lstep-body"><p class="just">A chama se propaga mais devagar e a combustão passa a variar de um ciclo para outro; na literatura, o limite é fixado quando o coeficiente de variação da pressão média efetiva indicada ultrapassa 5 %. No motor original deste trabalho, com a vela, a varredura terminou em λ = 1,4: a queima ficou tão lenta que o avanço necessário para manter a combustão em fase, 35°, esbarrou na detonação, com o CoV da IMEP ainda em 4,2 %.</p><p class="short">No motor original, a vela parou em λ = 1,4, limitada pela fase da combustão e pela detonação, com CoV da IMEP de 4,2 %.</p><p class="src">Os autores (2026); Heywood (2018)</p></div>
           </li>
           <li class="lstep" data-lambda="1.70" data-step="4">
             <p class="lstep-h"><span class="lstep-l">λ → 1,70</span> Estender o limite.</p>
@@ -116,7 +116,7 @@
         <span class="ticks" aria-hidden="true"></span>
         <div class="lean-head"><span class="mono lab-sm">FIG. 01 · LIMITE DE OPERAÇÃO POBRE</span><span class="mono meta">rendimento · NO<sub>x</sub> · CoV da IMEP</span></div>
         <div id="lean-chart" class="lean-chart"></div>
-        <figcaption class="lean-cap">Curvas qualitativas da monografia, com base em Alvarez et al. (2018) e Heywood (2018); nenhum valor foi medido neste trabalho. Use o ponteiro ou as setas do teclado sobre o gráfico. <details class="lean-table"><summary>Ver os valores em tabela</summary><div id="lean-table"></div></details></figcaption>
+        <figcaption class="lean-cap">Curvas qualitativas da monografia, com base em Alvarez et al. (2018) e Heywood (2018). Os pontos são o CoV da IMEP medido com a vela original, de λ = 1,0 a 1,4 (os autores, 2026). Use o ponteiro ou as setas do teclado sobre o gráfico. <details class="lean-table"><summary>Ver os valores em tabela</summary><div id="lean-table"></div></details></figcaption>
       </figure>
     </div>
   </div>
@@ -299,22 +299,22 @@
       <div>
         <p class="label rv"><i></i>CAPÍTULO 07 · O QUE VAMOS MEDIR</p>
         <h2 class="h2 rv" id="t08-h">O que a campanha vai medir</h2>
-        <p class="lead just narrow rv">Os ensaios comparam a ignição por vela e a pré-câmara ativa no mesmo motor, nas mesmas condições de rotação e carga. Os resultados serão incluídos ao fim da campanha experimental.</p>
+        <p class="lead just narrow rv">Os ensaios comparam a ignição por vela e a pré-câmara ativa no mesmo motor, nas mesmas condições de rotação e carga. A referência, com a vela original, já foi medida a 3260 rpm e borboleta aberta; os resultados da pré-câmara entram ao fim da campanha.</p>
       </div>
       <span class="chip chip-live rv">CAMPANHA EM ANDAMENTO</span>
     </div>
     <div class="grid4">
-      <!-- Modelo do resultado (quando a campanha terminar): no lugar de <p class="mono pend-t">RESULTADO PENDENTE</p>, usar
+      <!-- 18/10/2026: valores da vela (motor original) preenchidos; a pré-câmara segue pendente. Modelo do resultado (quando a campanha terminar): no lugar de <p class="mono pend-t">RESULTADO PENDENTE</p>, usar
            <p class="mono pend-t res"><b>λ 1,45 → 1,80</b> vela → pré-câmara</p> e trocar o selo da seção para CAMPANHA CONCLUÍDA.
            Formato: valor da vela → valor da pré-câmara, com unidade; fonte "os autores (2026)". Ver V6/06-conteudo/TEXTOS.md, T08. -->
-      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Limite de operação pobre</h3><p>Maior λ com combustão estável em cada configuração, pelo critério de 5 % no CoV da IMEP (coeficiente de variação da pressão média efetiva indicada).</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
-      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Variabilidade cíclica</h3><p>CoV da IMEP ao longo da varredura de λ, sobre algumas centenas de ciclos consecutivos.</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
-      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Rendimento térmico indicado</h3><p>Trabalho indicado por ciclo dividido pela energia do combustível admitido nas duas câmaras.</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
-      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Fase e duração da combustão</h3><p>Durações de 0 a 10 % e de 10 a 90 % da massa queimada e CA50 (ângulo de 50 % da massa queimada), a partir da taxa de liberação de calor.</p><p class="mono pend-t">RESULTADO PENDENTE</p></article>
+      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Limite de operação pobre</h3><p>Maior λ com combustão estável em cada configuração. Com a vela, a varredura parou pela fase da combustão e pela detonação, com o CoV da IMEP ainda abaixo de 5 %.</p><p class="mono pend-t res"><b>λ 1,4</b><br>com a vela<br>pré-câmara: pendente</p></article>
+      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Variabilidade cíclica</h3><p>CoV da IMEP (coeficiente de variação da pressão média efetiva indicada) ao longo da varredura de λ, sobre 200 ciclos consecutivos.</p><p class="mono pend-t res"><b>CoV 3,6–4,5 %</b><br>vela, λ 1,0 a 1,4<br>pré-câmara: pendente</p></article>
+      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Rendimento efetivo</h3><p>Potência medida no dinamômetro dividida pela potência química do combustível consumido.</p><p class="mono pend-t res"><b>η 23,6 %</b><br>vela, máximo em λ 1,3<br>pré-câmara: pendente</p></article>
+      <article class="card m glass rv"><span class="pend" aria-hidden="true"></span><h3>Fase e duração da combustão</h3><p>Durações de 0 a 10 % e de 10 a 90 % da massa queimada e CA50 (ângulo de 50 % da massa queimada), a partir da taxa de liberação de calor.</p><p class="mono pend-t res"><b>10–90 %: 32° a 51°</b><br>vela, λ 1,0 a 1,4<br>pré-câmara: pendente</p></article>
     </div>
     <div class="charts">
-      <figure class="chartbox dashed rv"><div id="chart-e5" class="chart-host chart-e5"><img width="3000" height="392" src="assets/fig/e5.webp" alt="Tendência esperada pela literatura: CoV da IMEP em função de λ; a vela cruza 5 % perto de λ 1,5 e a pré-câmara ativa em λ 1,94 (combustível líquido) ou 2,12 (vaporizado), segundo Zhu et al. (2022)." loading="lazy"></div></figure>
-      <figure class="chartbox dashed rv"><div id="chart-e6" class="chart-host chart-e6"><img width="2400" height="1520" src="assets/fig/e6.webp" alt="Pressão no cilindro e fração mássica queimada em função do ângulo do virabrequim: centelha em −25°, MFB 10 % em −2,6°, 50 % em +8,3° e 90 % em +19,8°." loading="lazy"></div><figcaption class="cap">O que a bancada vai registrar em cada ciclo: pressão no cilindro e fases da queima. Curvas ilustrativas da monografia (Figura 1), com base em Heywood (2018).</figcaption></figure>
+      <figure class="chartbox dashed rv"><div id="chart-e5" class="chart-host chart-e5"><img width="3345" height="838" src="assets/fig/e5.webp" alt="CoV da IMEP em função de λ: pontos medidos com a vela original, de 3,6 % a 4,5 % entre λ 1,0 e 1,4, onde a varredura parou; a pré-câmara ativa cruza 5 % em λ 1,94 (combustível líquido) ou 2,12 (vaporizado), segundo Zhu et al. (2022)." loading="lazy"></div></figure>
+      <figure class="chartbox dashed rv"><div id="chart-e6" class="chart-host chart-e6"><img width="2450" height="1595" src="assets/fig/e6.webp" alt="Pressão no cilindro e fração mássica queimada medidas com a vela em λ = 1,4: centelha a −35,2°, CA10 em −9,5°, CA50 em +10,3° e CA90 em +41,8°; pressão máxima de 28,8 bar a +10,7°." loading="lazy"></div><figcaption class="cap">O que a bancada registra em cada ciclo, medido com a vela original em λ = 1,4: pressão no cilindro e fração queimada (média de 200 ciclos) e ensaio arrastado a 2500 rpm. Os marcos são médias ciclo a ciclo. Fonte: os autores (2026).</figcaption></figure>
     </div>
   </div>
 </section>
