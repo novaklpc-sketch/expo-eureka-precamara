@@ -8,6 +8,7 @@
  * Movimento reduzido: sem contagem, sem anel e sem varredura; só a troca de estado.
  */
 import { initLeanChart, leanTable } from './chart.js';
+import { faixaPassos } from './util.js';
 
 const DUR = 600, SWEEP = 1600, SWEEP_TO = 1.5;
 const easeOut = t => 1 - Math.pow(1 - t, 4), easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -47,7 +48,7 @@ export function initLean(section, { reduced = false } = {}) {
     if (i === active) return;
     if (active >= 0) labels[active].textContent = original[active];
     active = i; to = lambdas[i];
-    steps.forEach((s, k) => s.classList.toggle('is-on', k === i));
+    steps.forEach((s, k) => { s.classList.toggle('is-on', k === i); s.classList.toggle('is-past', k < i); });
     if (reduced) { from = to; chart.setLambda(to); return; }
     if (sweeping) return; // o passo já acende; o marcador segue para ele quando a varredura terminar
     seguir();
@@ -68,7 +69,7 @@ export function initLean(section, { reduced = false } = {}) {
     };
     requestAnimationFrame(passo);
   };
-  const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) go(steps.indexOf(e.target)); }), { rootMargin: '-45% 0px -45% 0px' });
+  const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) go(steps.indexOf(e.target)); }), { rootMargin: faixaPassos() });
   steps.forEach(s => io.observe(s));
   if (!swept) new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { o.disconnect(); sweep(); } }, { threshold: .6 }).observe(host);
   return { go, sweep: endSweep };

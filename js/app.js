@@ -1,6 +1,6 @@
 /* atlas-v7 · orquestra a página. Cada tela tem seu bloco; o 3D entra por import dinâmico. */
 import { initLean } from './lean.js';
-import { easeOut, easeInOut } from './util.js';
+import { easeOut, easeInOut, faixaPassos } from './util.js';
 
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -95,12 +95,12 @@ const t03 = $('#t03'), t03steps = $$('.lstep', t03), frames = $$('.cut-frame', t
 let cad03 = null, step03 = 0;
 function setStep03(n) {
   if (n === step03) return; step03 = n;
-  t03steps.forEach(s => s.classList.toggle('is-on', +s.dataset.step === n));
+  t03steps.forEach(s => { s.classList.toggle('is-on', +s.dataset.step === n); s.classList.toggle('is-past', +s.dataset.step < n); });
   frames.forEach(f => f.classList.toggle('is-on', +f.dataset.step === n));
   dots.forEach((d, i) => { const on = i === n - 1; d.classList.toggle('is-on', on); if (on) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
   cad03?.setStep(n);
 }
-const t03IO = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setStep03(+e.target.dataset.step)), { rootMargin: '-45% 0px -45% 0px' });
+const t03IO = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setStep03(+e.target.dataset.step)), { rootMargin: faixaPassos() });
 t03steps.forEach(s => t03IO.observe(s));
 setStep03(1);
 /* os pontos levam ao passo: rolam o passo até o centro; o observador acende o resto */

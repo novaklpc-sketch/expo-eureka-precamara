@@ -403,7 +403,9 @@ a.doi:hover,a.doi:focus-visible{color:var(--text-2);background-size:100% 1px,100
   .sc-text>.label,.sc-text>.h2,.sc-text>.lead{order:-2}
   .sc-fig{order:-1;position:sticky;top:calc(var(--bar-h) + 6px);z-index:2;width:100%}
   .sc-text .lsteps{padding-bottom:20vh}
-  .scrolly .lstep{margin-bottom:46vh}
+  /* passos já lidos ficam abertos no celular: fechar o texto de cima fazia o passo aceso pular para baixo da figura (o Safari não compensa) */
+  .scrolly .lstep.is-past .lstep-body{max-height:420px;opacity:1}
+  .scrolly .lstep{margin-bottom:6vh}   /* era 46vh. Com os passos lidos abertos e a faixa de ativação mais baixa (util.js), 6vh encurta o cap. 01 em ~15 % e o 02 em ~25 %, e cada passo aceso fica legível por ≥ 300 px de rolagem (medido em 19/10/2026) */
   .lean{padding:12px 12px 8px}
   .lean-chart{height:38vh;min-height:240px}
   .lean-cap,.lean-head .meta,.synth,.dots{display:none}
