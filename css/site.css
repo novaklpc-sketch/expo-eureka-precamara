@@ -11,6 +11,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 .mono{font-family:var(--f-mono);font-feature-settings:"zero" 0}
 .just{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+/* colunas estreitas (cards da T01 e da T05, ficha da T06): justificado abria vãos de 3 a 5 espaços; vão à esquerda (19/10/2026) */
+.grid3 .just,.tl .just{text-align:left}
 .red{color:var(--red-text)!important}
 .wrap{width:min(100% - 2*var(--gutter),var(--wrap));margin-inline:auto}
 .skip{position:absolute;left:var(--gutter);top:-80px;z-index:100;background:#fff;color:#000;padding:12px 18px;border-radius:var(--r-pill);font:500 14px/1 var(--f-sans);text-decoration:none}
@@ -269,7 +271,7 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .specs div:first-child{border-top:0}
 .specs dt{font:400 12px/1.6 var(--f-mono);letter-spacing:.08em;color:var(--text-3)}
 .specs dd{font:400 15px/1.5 var(--f-mono);color:#fff}
-.specs dd.specs-note{font:400 15px/1.55 var(--f-sans);color:var(--text-2);text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+.specs dd.specs-note{font:400 15px/1.55 var(--f-sans);color:var(--text-2);text-align:left;hyphens:auto;-webkit-hyphens:auto}
 .photo-card{display:flex;align-items:center;gap:20px;margin-top:20px;padding:12px;width:100%;text-align:left;transition:border-color var(--d-base) var(--e-out),background-color var(--d-base) var(--e-out),transform var(--d-fast)}
 @media (hover:hover) and (pointer:fine){.photo-card:hover{border-color:rgba(255,255,255,.6);background-color:rgba(255,255,255,.05)}}
 .photo-card:focus-visible{border-color:rgba(255,255,255,.6)}
@@ -413,6 +415,8 @@ a.doi:hover,a.doi:focus-visible{color:var(--text-2);background-size:100% 1px,100
   /* no celular a legenda do corte sai, sem selo: exceção à regra II decidida por Lucas em 19/10/2026 (o texto alternativo continua dizendo "Corte ilustrativo") */
   .cut .cap{display:none}
   .just,.lead,.refs li{hyphens:auto;-webkit-hyphens:auto}
+  /* no celular a coluna é estreita demais para justificar: vãos de até 9 espaços entre palavras (medido em 19/10/2026) */
+  .just{text-align:left}
   .cmp-stage{aspect-ratio:4/3}
   .spec dl div{grid-template-columns:1fr;gap:2px}
   .specs div{grid-template-columns:1fr;gap:4px}
