@@ -410,7 +410,8 @@ a.doi:hover,a.doi:focus-visible{color:var(--text-2);background-size:100% 1px,100
   .lean-chart{height:38vh;min-height:240px}
   .lean-cap,.lean-head .meta,.synth,.dots{display:none}
   .cut{padding:10px}
-  .cut .cap{font-size:12px}
+  /* no celular a legenda do corte sai, sem selo: exceção à regra II decidida por Lucas em 19/10/2026 (o texto alternativo continua dizendo "Corte ilustrativo") */
+  .cut .cap{display:none}
   .just,.lead,.refs li{hyphens:auto;-webkit-hyphens:auto}
   .cmp-stage{aspect-ratio:4/3}
   .spec dl div{grid-template-columns:1fr;gap:2px}
