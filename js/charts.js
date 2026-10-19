@@ -1,5 +1,5 @@
 /* Gráficos da T08, desenhados em SVG (escaláveis, sem imagem).
- * E5 · CoV da IMEP × λ. Vela = pontos medidos com o motor original (os autores, 2026; js/dados-vela.js), até λ 1,4;
+ * E5 · CoV da IMEP × λ. Vela = pontos medidos com o motor original a 3000 rpm (os autores, 2026; js/dados-vela.js), até λ 1,4;
  *      pré-câmara ativa = curvas qualitativas ancoradas nos limites de Zhu et al. (2022): 1,94 (líquido) e 2,12 (vaporizado).
  * E6 · pressão no cilindro + fração queimada × ângulo, medidas com a vela em λ = 1,4 (média de 200 ciclos) e ensaio
  *      arrastado a 2500 rpm; marcos = médias ciclo a ciclo (centelha do mapa da gestão). Dados em js/dados-vela.js. */
@@ -22,15 +22,16 @@ export function drawE5(host) {
 }
 
 function desenhaE5(rotulo, e) {
-  const w = e ? 340 : 1200, h = e ? 478 : 300, svg = el('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': rotulo });
+  const w = e ? 340 : 1200, h = e ? 426 : 300, svg = el('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': rotulo });
   const tx = e ? 2 : 8, fs = e ? 12.5 : 13.5, lh = e ? 17.5 : 19;
-  txt(svg, tx, e ? 14 : 34, 'VELA MEDIDA · PRÉ-CÂMARA ESPERADA', { a: 'start', f: MONO, s: e ? 10.5 : 12, c: '#FF5A4F' });
+  txt(svg, tx, e ? 14 : 34, 'VELA MEDIDA · PRÉ-CÂMARA NA LITERATURA', { a: 'start', f: MONO, s: e ? 10.5 : 12, c: '#FF5A4F' });
   txt(svg, tx, e ? 40 : 64, 'Até onde a mistura pode empobrecer', { a: 'start', s: e ? 16.5 : 20, w: 600, c: '#fff' });
-  (e ? ['Pontos: CoV da IMEP medido com a vela', 'original. A varredura parou em λ = 1,4, pela', 'fase da combustão e pela detonação, ainda', 'abaixo de 5 %. Curvas da pré-câmara ativa:', 'limites de Zhu et al. (2022), líquido', '(λ = 1,94) e vaporizado (2,12); os dados deste', 'motor entram quando os ensaios terminarem.']
-     : ['Pontos: CoV da IMEP medido com a vela original. A', 'varredura parou em λ = 1,4, pela fase da combustão e', 'pela detonação, ainda abaixo de 5 %. Curvas da pré-', 'câmara ativa: limites de Zhu et al. (2022), líquido', '(λ = 1,94) e vaporizado (2,12); os dados deste motor', 'entram quando os ensaios terminarem.'])
+  /* texto curto (19/10/2026): o limite por rotação é dito na T02 e no cartão 1 da T08; pontos a 3000 rpm (linha de base de 19/10) */
+  (e ? ['Pontos: CoV da IMEP medido com a vela', 'original, a 3000 rpm. Pré-câmara ativa:', 'limites de Zhu et al. (2022), líquido', '(λ = 1,94) e vaporizado (2,12).']
+     : ['Pontos: CoV da IMEP medido com a vela original, a 3000 rpm.', 'Curvas da pré-câmara ativa: limites de Zhu et al.', '(2022), líquido (λ = 1,94) e vaporizado (2,12).'])
     .forEach((l, i) => txt(svg, tx, (e ? 66 : 96) + i * lh, l, { a: 'start', s: fs, c: W + '.68)' }));
-  txt(svg, tx, e ? 194 : 226, 'Fontes: os autores, 2026 (vela, medido); Zhu et al. (2022).', { a: 'start', s: e ? 10.5 : 11.5, c: W + '.42)' });
-  const P = e ? { l: 34, r: w - 6, t: 226, b: 382 } : { l: 470, r: w - 20, t: 24, b: h - 40 }, L0 = .9, L1 = 2.3, Y1 = 10;
+  txt(svg, tx, e ? 142 : 162, 'Fontes: os autores, 2026 (vela, medido); Zhu et al. (2022).', { a: 'start', s: e ? 10.5 : 11.5, c: W + '.42)' });
+  const P = e ? { l: 34, r: w - 6, t: 174, b: 330 } : { l: 470, r: w - 20, t: 24, b: h - 40 }, L0 = .9, L1 = 2.3, Y1 = 10;
   const ft = e ? 10.5 : 12;
   const X = l => P.l + (l - L0) / (L1 - L0) * (P.r - P.l), Y = v => P.b - Math.min(v, Y1) / Y1 * (P.b - P.t);
   for (let l = 1; l <= 2.21; l += .2) { svg.append(el('line', { x1: X(l), x2: X(l), y1: P.t, y2: P.b, stroke: W + '.07)' })); txt(svg, X(l), P.b + (e ? 17 : 20), br(l.toFixed(1)), { f: MONO, s: ft, c: W + '.5)' }); }
@@ -46,7 +47,7 @@ function desenhaE5(rotulo, e) {
   const LV = VELA.cov.lam[VELA.cov.lam.length - 1];
   svg.append(el('rect', { x: X(LV), y: P.t, width: X(1.94) - X(LV), height: P.b - P.t, fill: 'rgba(223,37,49,.10)' }));
   svg.append(el('rect', { x: X(1.94), y: P.t, width: X(2.12) - X(1.94), height: P.b - P.t, fill: 'rgba(223,37,49,.04)' }));
-  txt(svg, (X(LV) + X(1.94)) / 2, P.t + 16, e ? 'EXTENSÃO' : 'EXTENSÃO ESPERADA', { f: MONO, s: e ? 10 : 11, c: 'rgba(255,90,79,.9)' });
+  txt(svg, (X(LV) + X(1.94)) / 2, P.t + 16, e ? 'LITERATURA' : 'LITERATURA (ZHU)', { f: MONO, s: e ? 10 : 11, c: 'rgba(255,90,79,.9)' });
   const path = f => { let d = ''; for (let l = L0; l <= L1; l += .005) { const v = f(l); d += (d ? 'L' : 'M') + X(l).toFixed(1) + ' ' + Y(v).toFixed(1); if (v > Y1) break; } return d; };
   /* vela: pontos medidos, ligados por linha fina */
   svg.append(el('path', { d: VELA.cov.lam.map((l, i) => (i ? 'L' : 'M') + X(l).toFixed(1) + ' ' + Y(VELA.cov.cov[i]).toFixed(1)).join(''), fill: 'none', stroke: W + '.8)', 'stroke-width': 1.6 }));
@@ -57,12 +58,12 @@ function desenhaE5(rotulo, e) {
   const marcas = [[1.94, 'ativa, líquido · λ = 1,94', '#FF5A4F', -8, 0], [2.12, 'vaporizado · 2,12', 'rgba(255,90,79,.75)', 8, 1]];
   marcas.forEach(([l, , c, , oco]) => svg.append(el('circle', { cx: X(l), cy: Y(5), r: e ? 4.5 : 5, fill: oco ? 'none' : c, stroke: c, 'stroke-width': 1.6 })));
   if (!e) {
-    txt(svg, X(LV) - 8, Y(5) - 11, 'vela, medido · λ = 1,4', { s: 13, w: 500, c: '#fff', a: 'end' });
+    txt(svg, X(LV) - 8, Y(5) - 11, 'vela, 3000 rpm · até λ = 1,4', { s: 13, w: 500, c: '#fff', a: 'end' });
     marcas.forEach(([l, r, c, dx]) => txt(svg, X(l) + dx, Y(5) - 11, r, { s: 13, w: 500, c, a: dx < 0 ? 'end' : 'start' }));
     return [svg, w, h];
   }
   /* celular: legenda embaixo, no lugar dos rótulos sobre as curvas */
-  [['vela, medido · λ 1,0 a 1,4', '#fff', 'ponto'], ['ativa, líquido · λ = 1,94', '#FF3B3B', ''], ['ativa, vaporizado · λ = 2,12', 'rgba(255,90,79,.75)', '6 5']]
+  [['vela, 3000 rpm · λ 1,0 a 1,4', '#fff', 'ponto'], ['ativa, líquido · λ = 1,94', '#FF3B3B', ''], ['ativa, vaporizado · λ = 2,12', 'rgba(255,90,79,.75)', '6 5']]
     .forEach(([r, c, d], i) => {
       const y = P.b + 44 + i * 18;
       if (d === 'ponto') svg.append(el('circle', { cx: tx + 12, cy: y - 4, r: 4, fill: '#050505', stroke: c, 'stroke-width': 1.6 }));

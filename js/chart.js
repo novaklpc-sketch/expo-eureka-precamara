@@ -29,9 +29,9 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  svg.append(el('title',{id:'lean-svg-title'},'Rendimento térmico, NOx relativo e CoV da IMEP em função do fator lambda, com o limite de operação pobre da literatura e o CoV medido com a vela original até lambda 1,4'));
  host.append(svg);
  const panels=[
-  {key:'eta',name:'Rendimento térmico',unit:'%',min:30,max:48,ticks:[32,40,48],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
-  {key:'nox',name:'NOx relativo',unit:'%',min:0,max:105,ticks:[0,50,100],fmt:v=>Math.round(v)+' %'},
-  {key:'cov',name:'CoV da IMEP',unit:'%',min:0,max:20,ticks:[0,5,10,20],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
+  {key:'eta',name:'Rendimento térmico',unit:'%',min:30,max:48,ticks:[32,40,48],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
+  {key:'nox',name:'NOx relativo',unit:'%',min:0,max:105,ticks:[0,50,100],fmt:v=>Math.round(v)+' %'},
+  {key:'cov',name:'CoV da IMEP',unit:'%',min:0,max:20,ticks:[0,5,10,20],fmt:v=>v.toFixed(1).replace('.',',')+' %'},
  ];
  let W=0,H=0,plot=null,lambda=1.0,pointerLambda=null,layers={};
  const small=()=>W<560;
@@ -82,7 +82,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
   g.append(el('line',{class:'lean-arrow',x1:xv+2,x2:xe,y1:ya,y2:ya,'marker-end':'url(#lean-head)'}));
   g.append(el('text',{class:'lean-note lean-note-red',x:(xv+xe)/2,y:ya-7,'text-anchor':'middle'},small()?'extensão pretendida':'extensão pretendida com pré-câmara'));
   // no celular não cabe ao lado de "extensão pretendida"; a linha pontilhada e o painel do CoV marcam o fim da varredura
-  if(!small())g.append(el('text',{class:'lean-note lean-note-meas',x:xv-6,y:ya+4,'text-anchor':'end'},'vela, medido: λ 1,4'));
+  if(!small())g.append(el('text',{class:'lean-note lean-note-meas',x:xv-6,y:ya+16,'text-anchor':'end'},'vela, medido: λ 1,4'));   // abaixo da seta, sem encostar em "extensão pretendida"
   const defs=el('defs');const m=el('marker',{id:'lean-head',markerWidth:8,markerHeight:8,refX:7,refY:4,orient:'auto',markerUnits:'userSpaceOnUse'});m.append(el('path',{d:'M0 0 L8 4 L0 8 Z',class:'lean-arrow-head'}));defs.append(m);svg.append(defs);
   // eixo λ
   const yb=H-plot.bottom+4;
@@ -121,7 +121,7 @@ export function initLeanChart(host,{static:isStatic=false,onPointer=null}={}){
  host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','Gráfico interativo do limite pobre. Use as setas para mover o fator lambda.');
  const live=document.createElement('p');live.className='sr-only';live.setAttribute('role','status');host.after(live);
  let liveT=0;
- const announce=()=>{clearTimeout(liveT);liveT=setTimeout(()=>{const l=pointerLambda??lambda;live.textContent=`λ ${l.toFixed(2).replace('.',',')}: rendimento ${curves.eta(l).toFixed(1).replace('.',',')} %, NOx relativo ${Math.round(curves.nox(l))} %, CoV da IMEP ${(covMedido(l)??curves.cov(l)).toFixed(1).replace('.',',')} %${covMedido(l)!=null?', medido com a vela':''}${l>=LIMIT?', região instável':''}.`},300)};
+ const announce=()=>{clearTimeout(liveT);liveT=setTimeout(()=>{const l=pointerLambda??lambda;live.textContent=`λ ${l.toFixed(2).replace('.',',')}: rendimento ${curves.eta(l).toFixed(1).replace('.',',')} %, NOx relativo ${Math.round(curves.nox(l))} %, CoV da IMEP ${(covMedido(l)??curves.cov(l)).toFixed(1).replace('.',',')} %${covMedido(l)!=null?', medido com a vela':''}${l>=LIMIT?', região instável':''}.`},300)};
  host.addEventListener('keydown',e=>{
   const step=e.shiftKey?.1:.01;let l=pointerLambda??lambda;
   if(e.key==='ArrowRight'||e.key==='ArrowUp')l+=step;else if(e.key==='ArrowLeft'||e.key==='ArrowDown')l-=step;
