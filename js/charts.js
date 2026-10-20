@@ -1,8 +1,9 @@
 /* Gráficos da T08, desenhados em SVG (escaláveis, sem imagem).
  * E5 · CoV da IMEP × λ. Vela = pontos medidos com o motor original a 3000 rpm (os autores, 2026; js/dados-vela.js), até λ 1,4;
  *      pré-câmara ativa = curvas qualitativas ancoradas nos limites de Zhu et al. (2022): 1,94 (líquido) e 2,12 (vaporizado).
- * E6 · pressão no cilindro + fração queimada × ângulo, medidas com a vela em λ = 1,4 (média de 200 ciclos) e ensaio
- *      arrastado a 2500 rpm; marcos = médias ciclo a ciclo (centelha do mapa da gestão). Dados em js/dados-vela.js. */
+ * E6 · pressão no cilindro + fração queimada × ângulo, medidas com a vela a 3000 rpm em λ = 1,0 e 1,4 (média de 200 ciclos,
+ *      linha de base de 19/10/2026); marcos = médias ciclo a ciclo de λ = 1,4. Sem centelha: o avanço de 19/10 não foi
+ *      registrado (Seção 4.1). Dados em js/dados-vela.js. */
 import { el } from './chart.js';
 import { VELA } from './dados-vela.js';
 const W = 'rgba(255,255,255,', MONO = 'var(--f-mono)', SANS = 'var(--f-sans)';
@@ -78,7 +79,7 @@ export function drawE6(host) {
 }
 
 function desenhaE6(rotulo, e) {
-  const D = VELA.e6, M = D.marcos;
+  const D = VELA.e6, [C0, C1] = D.curvas, M = C1.marcos, NB = ' ';
   const w = e ? 340 : 1200, h = e ? 470 : 780, svg = el('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': rotulo });
   const P = e ? { l: 36, r: w - 40, t: 58, b: 290 } : { l: 100, r: w - 110, t: 120, b: h - 160 };
   const ft = e ? 10.5 : 14, passo = e ? 30 : 15;
@@ -86,33 +87,37 @@ function desenhaE6(rotulo, e) {
   for (let th = -60; th <= 90; th += passo) { svg.append(el('line', { x1: X(th), x2: X(th), y1: P.t, y2: P.b, stroke: W + '.08)' })); txt(svg, X(th), P.b + (e ? 16 : 26), br(th), { f: MONO, s: ft }); }
   for (let v = 0; v <= 50; v += 10) { svg.append(el('line', { x1: P.l, x2: P.r, y1: Yp(v), y2: Yp(v), stroke: W + '.08)' })); txt(svg, P.l - (e ? 6 : 14), Yp(v) + (e ? 4 : 5), v, { f: MONO, s: ft, a: 'end' }); txt(svg, P.r + (e ? 6 : 14), Yp(v) + (e ? 4 : 5), v * 2, { f: MONO, s: ft, a: 'start', c: '#FF7A6F' }); }
   svg.append(el('rect', { x: P.l, y: P.t, width: P.r - P.l, height: P.b - P.t, fill: 'none', stroke: W + '.3)' }));
-  svg.append(el('rect', { x: X(M.centelha), y: P.t, width: X(M.ca10) - X(M.centelha), height: P.b - P.t, fill: 'rgba(120,180,140,.07)' }));
   svg.append(el('rect', { x: X(M.ca10), y: P.t, width: X(M.ca90) - X(M.ca10), height: P.b - P.t, fill: 'rgba(223,37,49,.08)' }));
   txt(svg, (P.l + P.r) / 2, P.b + (e ? 38 : 56), 'Ângulo do virabrequim (° em relação ao PMS)', { s: e ? 11.5 : 16 });
   svg.append(el('text', { x: 0, y: 0, fill: W + '.8)', 'font-size': e ? 11 : 16, 'text-anchor': 'middle', 'font-family': SANS, transform: `translate(${e ? 9 : P.l - 62},${(P.t + P.b) / 2}) rotate(-90)` }, 'Pressão no cilindro (bar)'));
   svg.append(el('text', { x: 0, y: 0, fill: '#FF7A6F', 'font-size': e ? 11 : 16, 'text-anchor': 'middle', 'font-family': SANS, transform: `translate(${e ? w - 6 : P.r + 66},${(P.t + P.b) / 2}) rotate(90)` }, 'Fração queimada (%)'));
   const vl = (th, c, d) => svg.append(el('line', { x1: X(th), x2: X(th), y1: P.t, y2: P.b, stroke: c, 'stroke-dasharray': d, 'stroke-width': 1.2 }));
-  vl(0, W + '.4)', '2 4'); vl(M.centelha, W + '.7)', '6 4'); [M.ca10, M.ca50, M.ca90].forEach(t => vl(t, 'rgba(255,90,79,.6)', '4 4'));
+  vl(0, W + '.4)', '2 4'); [M.ca10, M.ca50, M.ca90].forEach(t => vl(t, 'rgba(255,90,79,.6)', '4 4'));
   txt(svg, X(0) + (e ? 4 : 6), P.b - (e ? 6 : 8), 'PMS', { f: MONO, s: e ? 9.5 : 12, a: 'start', c: W + '.55)' });
-  /* marcos no eixo de cima: médias ciclo a ciclo de λ = 1,4 */
+  /* marcos no eixo de cima: médias ciclo a ciclo de λ = 1,4 (os mesmos da tabela de fase e duração da combustão da Seção 4.1) */
   const sg = v => (v > 0 ? '+' : '') + br(v.toFixed(1));
-  [[M.centelha, 'centelha', sg(M.centelha) + '°'], [M.ca10, 'CA10', sg(M.ca10) + '°'], [M.ca50, 'CA50', sg(M.ca50) + '°'], [M.ca90, 'CA90', sg(M.ca90) + '°']]
-    .forEach(([t, a, b], i) => { const c = i ? '#FF5A4F' : W + '.8)'; txt(svg, X(t), P.t - (e ? 26 : 34), a, { s: e ? 10.5 : 13, c }); txt(svg, X(t), P.t - (e ? 11 : 16), b, { f: MONO, s: e ? 9.5 : 12, c }); });
+  [[M.ca10, 'CA10'], [M.ca50, 'CA50'], [M.ca90, 'CA90']]
+    .forEach(([t, a]) => { txt(svg, X(t), P.t - (e ? 26 : 34), a, { s: e ? 10.5 : 13, c: '#FF5A4F' }); txt(svg, X(t), P.t - (e ? 11 : 16), sg(t) + '°', { f: MONO, s: e ? 9.5 : 12, c: '#FF5A4F' }); });
   const path = (ys, Y) => D.theta.map((t, k) => (k ? 'L' : 'M') + X(t).toFixed(1) + ' ' + Y(ys[k]).toFixed(1)).join('');
-  svg.append(el('path', { d: path(D.pArr, Yp), fill: 'none', stroke: W + '.75)', 'stroke-width': e ? 1.5 : 2, 'stroke-dasharray': e ? '5 4' : '8 6' }));
-  svg.append(el('path', { d: path(D.p, Yp), fill: 'none', stroke: '#fff', 'stroke-width': e ? 2 : 3 }));
-  svg.append(el('path', { d: path(D.mfb.map(v => v * 100), Ym), fill: 'none', stroke: '#FF3B3B', 'stroke-width': e ? 2 : 3 }));
-  /* no celular, a pressão máxima vai para baixo da legenda (sobre o gráfico, cruzaria os marcos) */
-  if (e) txt(svg, 4, P.b + 70 + 5 * 18 + 4, `λ = 1,4 · Pmáx ${br(M.pmax.toFixed(1))} bar a ${sg(M.apmax)}°`, { f: MONO, s: 10.5, a: 'start', c: W + '.8)' });
-  else txt(svg, X(66), P.t + 62, `λ = 1,4 · Pmáx ${br(M.pmax.toFixed(1))} bar a ${sg(M.apmax)}°`, { f: MONO, s: 13, c: W + '.8)' });
+  const tr = e ? '5 4' : '8 6';
+  svg.append(el('path', { d: path(C0.p, Yp), fill: 'none', stroke: W + '.6)', 'stroke-width': e ? 1.5 : 2, 'stroke-dasharray': tr }));
+  svg.append(el('path', { d: path(C0.mfb.map(v => v * 100), Ym), fill: 'none', stroke: 'rgba(255,90,79,.7)', 'stroke-width': e ? 1.5 : 2, 'stroke-dasharray': tr }));
+  svg.append(el('path', { d: path(C1.p, Yp), fill: 'none', stroke: '#fff', 'stroke-width': e ? 2 : 3 }));
+  svg.append(el('path', { d: path(C1.mfb.map(v => v * 100), Ym), fill: 'none', stroke: '#FF3B3B', 'stroke-width': e ? 2 : 3 }));
   /* legenda fora das curvas, embaixo */
-  [['Pressão com combustão (vela, λ = 1,4)', '#fff', ''], ['Pressão arrastada (2500 rpm)', W + '.75)', '8 6'], ['Fração mássica queimada (%)', '#FF3B3B', ''], ['desenvolvimento inicial (centelha a 10 %)', 'rgba(120,180,140,.5)', 'band'], ['queima rápida (10–90 %)', 'rgba(223,37,49,.45)', 'band']]
-    .forEach(([t, c, d], i) => {
-      /* no celular, uma coluna embaixo do eixo */
-      const x = e ? 4 : 60 + (i % 3) * 380, y = e ? P.b + 70 + i * 18 : h - 22 + (i < 3 ? -26 : 0), lw = e ? 24 : 32;
-      if (d === 'band') svg.append(el('rect', { x, y: y - (e ? 9 : 11), width: lw, height: e ? 8 : 10, fill: c }));
-      else svg.append(el('line', { x1: x, x2: x + lw, y1: y - (e ? 4 : 5), y2: y - (e ? 4 : 5), stroke: c, 'stroke-width': e ? 2.2 : 3, 'stroke-dasharray': e && d ? '5 4' : d }));
-      txt(svg, x + lw + 10, y, t, { a: 'start', s: e ? 12 : 13.5 });
-    });
+  const lam = c => 'λ = ' + br(c.lam.toFixed(1));
+  const leg = [[`Pressão, ${lam(C0)}`, W + '.6)', tr], [`Pressão, ${lam(C1)}`, '#fff', ''], [`queima de 10 a 90${NB}%, ${lam(C1)}`, 'rgba(223,37,49,.45)', 'band'],
+    [`Fração queimada, ${lam(C0)}`, 'rgba(255,90,79,.7)', tr], [`Fração queimada, ${lam(C1)}`, '#FF3B3B', '']];
+  leg.forEach(([t, c, d], i) => {
+    /* no celular, uma coluna embaixo do eixo */
+    const x = e ? 4 : 60 + (i % 3) * 380, y = e ? P.b + 70 + i * 18 : h - 22 + (i < 3 ? -26 : 0), lw = e ? 24 : 32;
+    if (d === 'band') svg.append(el('rect', { x, y: y - (e ? 9 : 11), width: lw, height: e ? 8 : 10, fill: c }));
+    else svg.append(el('line', { x1: x, x2: x + lw, y1: y - (e ? 4 : 5), y2: y - (e ? 4 : 5), stroke: c, 'stroke-width': e ? 2.2 : 3, 'stroke-dasharray': d }));
+    txt(svg, x + lw + 10, y, t, { a: 'start', s: e ? 12 : 13.5 });
+  });
+  /* pressão máxima média ciclo a ciclo; no celular, embaixo da legenda (sobre o gráfico, cruzaria os marcos) */
+  const pm = `Pmáx: ${br(C0.marcos.pmax.toFixed(1))} bar (${lam(C0)}) · ${br(M.pmax.toFixed(1))} bar (${lam(C1)})`;
+  if (e) txt(svg, 4, P.b + 70 + leg.length * 18 + 4, pm, { f: MONO, s: 10.5, a: 'start', c: W + '.8)' });
+  else txt(svg, P.r - 16, Yp(36), pm, { f: MONO, s: 13, a: 'end', c: W + '.8)' });   // área livre: depois de +45° a pressão fica abaixo de 20 bar e a fração queimada acima de 90 %
   return [svg, w, h];
 }

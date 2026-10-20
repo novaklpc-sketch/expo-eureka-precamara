@@ -207,14 +207,14 @@ text.lean-note{font-size:12px;fill:var(--text-3)}
 .synth .just{margin-top:6px;color:var(--text-1);font-size:15.5px}
 
 /* ---------- T04 comparador ---------- */
-.cmp{position:relative;margin-top:24px;padding:16px}
-.cmp-stage{position:relative;aspect-ratio:16/4.4;border-radius:var(--r-sm);overflow:hidden;background:#262626;touch-action:pan-y}
+.cmp{position:relative;margin-top:24px;padding:16px;max-width:1040px;margin-inline:auto}  /* 20/10/2026: imagem inteira e menor (pedido de Lucas) */
+.cmp-stage{position:relative;aspect-ratio:1672/941;border-radius:var(--r-sm);overflow:hidden;background:#262626;touch-action:pan-y}
 .cmp-a,.cmp-b img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
 .cmp-b{position:absolute;inset:0;clip-path:inset(0 0 0 var(--pos))}
 .cmp-stage::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(40,60,80,.12),transparent 40%,transparent 60%,rgba(223,37,49,.14));pointer-events:none}
-.cmp-tag{position:absolute;top:16px;font-size:13px;letter-spacing:.14em;z-index:2}
-.cmp-tag-a{left:18px;color:var(--text-3)}
-.cmp-tag-b{right:18px;color:var(--red-text)}
+.cmp-tag{position:absolute;top:14px;font-size:13px;letter-spacing:.14em;z-index:2;background:rgba(5,5,5,.82);padding:5px 8px 5px 10px;border-radius:4px}  /* tarja: legível sobre a ilustração em quadrinho (20/10/2026) */
+.cmp-tag-a{left:14px;color:var(--text-2)}
+.cmp-tag-b{right:14px;color:var(--red-text)}
 .cmp-track{position:absolute;inset:0;transform:translateX(var(--pos));pointer-events:none;will-change:transform}
 .cmp-line{position:absolute;top:0;bottom:0;left:0;width:2px;margin-left:-1px;background:var(--red);box-shadow:0 0 16px 2px rgba(223,37,49,.7);z-index:2;pointer-events:none}
 .cmp-handle{position:absolute;top:50%;left:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(10,10,10,.75);border:2px solid var(--red);box-shadow:0 0 18px rgba(223,37,49,.6);z-index:3;pointer-events:none}
@@ -427,7 +427,7 @@ a.doi:hover,a.doi:focus-visible{color:var(--text-2);background-size:100% 1px,100
   .just,.lead,.refs li{hyphens:auto;-webkit-hyphens:auto}
   /* no celular a coluna é estreita demais para justificar: vãos de até 9 espaços entre palavras (medido em 19/10/2026) */
   .just{text-align:left}
-  .cmp-stage{aspect-ratio:4/3}
+  .cmp-stage{aspect-ratio:1672/941}
   .spec dl div{grid-template-columns:1fr;gap:2px}
   .specs div{grid-template-columns:1fr;gap:4px}
   .timeline{grid-template-columns:1fr;margin-top:40px}
